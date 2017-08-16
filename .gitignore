@@ -95,3 +95,4 @@ instance/
 env/
 venv/
 ENV/
+/app/static/images

@@ -1,0 +1,55 @@
+{% extends 'bootstrap/base.html' %}
+
+{% block styles %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script src="{{ url_for('static', filename='js/js.js') }}"></script>
+{% endblock %}
+
+{% block navbar %}
+     <nav class="navbar navbar-inverse" style="margin-bottom: 0; border-radius:0;">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a name="Home" class="navbar-brand page" href="{{ url_for('main_blueprint.index') }}">
+              <span class="glyphicon glyphicon-home" style="color: white"></span>
+              <span style="color: white; font-weight: bold;">PERSONAL TRAINING DIARY</span></a>
+        </div>
+        <ul class="nav navbar-nav navbar-right">
+            <li><a href="{{ url_for('auth_blueprint.register') }}"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+            <li><a href="{{ url_for('auth_blueprint.login') }}"><span class="glyphicon glyphicon-log-in"></span> Log in</a></li>
+        </ul>
+      </div>
+    </nav>
+{% endblock %}
+
+{% block content %}
+
+    <ol class="breadcrumb" style="height: 15px;">
+      <li><a href="#">Home</a></li>
+        <li><a href="#">Admin</a></li>
+    </ol>
+
+   <div class="container-fluid" style="background-color: rgba(36, 41, 46, 0.5)">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3" style="margin-top: 1%;">
+           {% with messages = get_flashed_messages() %}
+              {% if messages %}
+                <ul class="flashes">
+                {% for message in messages %}
+                  <div class="alert alert-info alert-dismissable">
+                      <button type="button" class="close" data-dismiss="alert">X</button>
+                      {{ message }}
+                  </div>
+                {% endfor %}
+                </ul>
+              {% endif %}
+           {% endwith %}
+        </div>
+    </div>
+    </div>
+
+{% endblock %}

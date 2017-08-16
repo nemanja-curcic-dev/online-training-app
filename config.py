@@ -12,7 +12,8 @@ class Config:
     mysql_username = os.environ['MYSQL_USERNAME']
     mysql_password = os.environ['MYSQL_PASSWORD']
 
-    SQLALCHEMY_DATABASE_URI = 'mysql://' + mysql_username + ':' + mysql_password + '@localhost/online-training-app'
+    SQLALCHEMY_DATABASE_URI = 'mysql://' + mysql_username + ':' + \
+                              mysql_password + '@localhost/online-training-app?charset=utf8'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     """Email server set up"""

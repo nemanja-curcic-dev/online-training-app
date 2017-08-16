@@ -1,0 +1,60 @@
+body{
+    background-image: url("../images/pozadina_5.jpg");
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+}
+
+/*--------------Forms (global)-----------------*/
+.form{
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 7px;
+    box-shadow: 10px 10px 10px gray;
+    font-weight: bold;
+    margin-top: 3%;
+    margin-bottom: 3%;
+    padding: 1%;
+}
+
+.form-button{
+    background-color: #24292e;
+}
+
+.form-button:hover{
+    background-color: rgba(36, 41, 46, 0.9);
+}
+
+.form-button:active{
+   background-color: rgba(36, 41, 46, 0.9);
+}
+
+/**/
+.main-div{
+    background-color: rgba(36, 41, 46, 0.5);
+    min-height: 600px;
+    margin: 0;
+}
+
+
+/*------------------Index page----------------------*/
+.content{
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 7px;
+    margin-top: 3%;
+    color: #24292e;
+}
+
+/*------------------Admin panel---------------------*/
+
+.main-content-area{
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 7px;
+    margin-top: 1%;
+    text-align: center;
+}
+
+#dashboard-div, #latest-activity{
+    background-color: #24292e;
+    border: 1px solid #24292e;
+}
+

@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block navbar %}
+
+     <nav class="navbar navbar-inverse" style="margin-bottom: 0; border-radius:0;">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand">
+              <span class="glyphicon glyphicon-home" style="color: white"></span>
+              <span style="color: white; font-weight: bold;">PERSONAL TRAINING DIARY</span>
+          </a>
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#admin_navbar">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+        </div>
+        <div class="collapse navbar-collapse" id="admin_navbar">
+            <ul class="nav navbar-nav">
+              <li class="active"><a href="{{ url_for('admin_blueprint.admin', id=current_user.id) }}">ADMIN PANEL</a></li>
+              <li><a href="#">CLIENTS</a></li>
+              <li class="dropdown">
+                  <a class="dropdown-toggle" data-toggle="dropdown" href="#">EXERCISES
+                      <span class="caret"></span></a>
+                  <ul class="dropdown-menu">
+                      <li><a name="/by_muscle_group" class="admin-ajax" href="{{ url_for('admin_blueprint.by_muscle_group') }}">By muscle group</a></li>
+                      <li><a class="admin-ajax" href="#">Bodyweight</a></li>
+                      <li><a class="admin-ajax" href="#">Weight</a></li>
+                      <li><a name="/add_exercise" class="admin-ajax" href="#">Add exercise</a></li>
+                      <li><a class="admin-ajax" href="#">Delete exercise</a></li>
+                      <li><a class="admin-ajax" href="#">Update exercise</a></li>
+                  </ul>
+              </li>
+              <li class="dropdown">
+                  <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                      TESTS <span class="caret"></span>
+                  </a>
+                  <ul class="dropdown-menu">
+                      <li><a href="#">Aerobic</a></li>
+                      <li><a href="#">Strength</a></li>
+                      <li><a href="#">Mobility</a></li>
+                  </ul>
+              </li>
+              <li><a href="#">TRAINING</a></li>
+              <li><a href="#">TEMPLATES</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="{{ url_for('auth_blueprint.logout') }}"><span class="glyphicon glyphicon-log-out"></span> Log out</a></li>
+            </ul>
+            </div>
+      </div>
+    </nav>
+
+{% endblock %}
+
+{% block content %}
+    {{ super() }}
+
+    <div class="container-fluid main-div">
+
+        <div class="row">
+            <div class="col-md-offset-1 col-md-10" id="main-content-area">
+
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-offset-1 col-md-3">
+                <div class="list-group">
+                    <a class="list-group-item active text-center" id="dashboard-div">
+                        Dashboard <span style="color: white;" class="glyphicon glyphicon-cog"></span>
+                    </a>
+                    <a class="list-group-item text-center" href="">
+                        Clients registered <span class="badge">{{ client_count }}</span>
+                    </a>
+                    <a class="list-group-item text-center" href="">
+                        Trainings done <span class="badge">{{ training_count }}</span>
+                    </a>
+                    <a class="list-group-item text-center" href="">
+                        Exercises in database <span class="badge">{{ exercises_count }}</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-md-offset-1 col-md-6">
+                <div class="list-group">
+                    <a class="list-group-item active text-center" id="latest-activity">
+                        Latest active clients <span class="glyphicon glyphicon-user"></span>
+                    </a>
+                    {% for s in seen %}
+                        <a class="list-group-item text-center">
+                            {{ s }}
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,87 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12 form">
+            <div class="row text-center">
+                <h3>Add exercise</h3>
+            </div>
+
+            <form method="post" action="{{ url_for('admin_blueprint.add_exercise') }}">
+
+                {{ form.hidden_tag() }}
+                {{ form.csrf_token }}
+
+                <div class="col-md-3">
+                   <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                {{ form.exercise_name(class='form-control', placeholder='Name of exercise') }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                {{ form.priority(class='form-control') }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                {{ form.direction(class='form-control') }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                {{ form.type(class='form-control') }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-offset-1 col-md-4">
+                    <ul class="list-group text-center">
+                        <li style="background-color: #24292e; border: 1px solid #24292e;" class="list-group-item active">Choose muscles involved</li>
+                        {% for key, sub_muscles in dict_muscles.items() %}
+                            <li class="list-group-item">
+                                <a name="{{ key.id }}" href="#" class="ajax-main-muscles" style="color: #24292e;">
+                                    {{ key }}
+                                    {% for sub_dict in sub_muscles %}
+                                        <div class="{{ key.id }}" style="display: none">
+                                        {% for sub_key, sub_val in sub_dict.items() %}
+                                            <a class="ajax-sub-muscles" name="{{ key.id }}{{ sub_key.id }}" href="#">{{ sub_key }}</a>
+                                            <div class="{{ key.id }}{{ sub_key.id }}" style="display: none;">
+                                                {% for m in sub_val %}
+                                                    <a class="ajax-muscles" id="{{ m.id }}" href="#" style="color: #24292e;">{{ m }}</a><br>
+                                                {% endfor %}
+                                            </div>
+                                        {% endfor %}
+                                        </div>
+                                    {% endfor %}
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <div class="col-md-offset-1 col-md-3">
+                    <div id="exercises_added" style="margin-bottom: 2%; width: 100%; background-color: white; border-radius: 7px; min-height: 250px;">
+
+                    </div>
+                    <button type="submit" style="width: 100%;" class="btn btn-primary form-button">Add exercise</button>
+                </div>
+
+                <select name="muscles" id="muscles_involved" multiple>
+
+                </select>
+
+            </form>
+
+        </div>
+    </div>
+</div>

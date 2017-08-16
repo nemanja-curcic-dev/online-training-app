@@ -1,0 +1,13 @@
+
+<h3>Hello, {{ user.first_name }}</h3>
+<br>
+
+<h3>Welcome to Personal training diary!</h3>
+<br>
+
+<p>You must click on the following link to confirm your account.</p>
+<br>
+
+<a href="{{ url_for('auth_blueprint.confirm', token=token, _external=True) }}">link</a>
+
+<h3>Your Personal training diary team!</h3>

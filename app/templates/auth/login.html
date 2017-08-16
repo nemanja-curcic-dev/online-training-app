@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {{ super() }}
+
+    <div class="container-fluid main-div">
+        <div class="row">
+            <div class="col-md-4 col-md-offset-4 form">
+                <div class="row text-center">
+                    <h3>Log in</h3>
+                </div>
+
+                <form action="{{ url_for('auth_blueprint.login') }}" method="post">
+                    {{ form.hidden_tag() }}
+                    {{ form.csrf_token }}
+
+                    {% if form.email.errors %}
+                        <div class="form-group has-error">
+                            {{ form.email(class='form-control form-control-danger') }}
+                            {% for error in form.email.errors %}
+                                <p class="help-block">{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="form-group">
+                            <label for="email" class="sr-only">Email</label>
+                            {{ form.email(class='form-control', placeholder='Email') }}
+                        </div>
+                {% endif %}
+
+                {% if form.password.errors %}
+                    <div class="form-group has-error">
+                        {{ form.password(class='form-control form-control-danger') }}
+                        {% for error in form.password.errors %}
+                            <p class="help-block">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="form-group">
+                        <label for="password" class="sr-only">Password</label>
+                        {{ form.password(class='form-control', placeholder='Password') }}
+                    </div>
+                {% endif %}
+
+                <div class="form-horizontal">
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                            {{ form.remember_me(**{'vertical-alignment': 'top'}) }}
+                            <label style="vertical-align: bottom" for="remember_me">Remember me?</label>
+                        </div>
+                        <div class="col-md-6 text-right">
+                            <a href="{{ url_for('auth_blueprint.forgot_password') }}">Forgot password?</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" style="width: 100%" class="btn btn-primary form-button">Log in</button>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-offset-4 col-md-4 text-center">
+                        <p style="font-weight: bold; margin-left: 12px; ">New here?</p>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-offset-4 col-md-4 text-center">
+                        <a href="{{ url_for('auth_blueprint.register') }}" style="margin-left: 12px;" class="btn btn-default">Sign up</a>
+                    </div>
+                </div>
+
+            </form>
+
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

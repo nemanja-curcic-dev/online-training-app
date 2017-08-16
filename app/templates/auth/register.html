@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {{ super() }}
+
+
+    <div class="container-fluid main-div">
+        <div class="row">
+            <div class="col-md-4 col-md-offset-4 form">
+                <div class="row text-center">
+                    <h3>Register account</h3>
+                </div>
+
+                <form action="{{ url_for('auth_blueprint.register') }}" method="post">
+
+                    {{ form.hidden_tag() }}
+                    {{ form.csrf_token }}
+
+                    {% if form.first_name.errors %}
+                        <div class="form-group has-error">
+                            {{ form.first_name(class='form-control form-control-danger',
+                                    placeholder='First name') }}
+                            {% for error in form.first_name.errors %}
+                                <p class="help-block">{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="form-group">
+                            <label for="first_name" class="sr-only">First name</label>
+                            {{ form.first_name(class='form-control', placeholder='First name') }}
+                        </div>
+                    {% endif %}
+
+                    {% if form.last_name.errors %}
+                        <div class="form-group has-error">
+                            {{ form.last_name(class='form-control form-control-danger',
+                                    placeholder='Last name') }}
+                            {% for error in form.last_name.errors %}
+                                <p class="help-block">{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="form-group">
+                            <label for="last_name" class="sr-only">Last name</label>
+                            {{ form.last_name(class='form-control', placeholder='Last name') }}
+                        </div>
+                    {% endif %}
+
+                    {% if form.email.errors %}
+                        <div class="form-group has-error">
+                            {{ form.email(class='form-control form-control-danger',
+                                    placeholder='Email') }}
+                            {% for error in form.email.errors %}
+                                <p class="help-block">{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="form-group">
+                            <label for="email" class="sr-only">Email</label>
+                            {{ form.email(class='form-control', placeholder='Email') }}
+                        </div>
+                    {% endif %}
+
+                    {% if form.password.errors %}
+                        <div class="form-group has-error">
+                            {{ form.password(class='form-control form-control-danger',
+                                    placeholder='Password') }}
+                            {% for error in form.password.errors %}
+                                <p class="help-block">{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="form-group">
+                            <label for="email" class="sr-only">Password</label>
+                            {{ form.password(class='form-control', placeholder='Password') }}
+                        </div>
+                    {% endif %}
+
+                    {% if form.retype_password.errors %}
+                        <div class="form-group has-error">
+                            {{ form.retype_password(class='form-control form-control-danger',
+                                    placeholder='Retype password') }}
+                            {% for error in form.retype_password.errors %}
+                                <p class="help-block">{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="form-group">
+                            <label for="retype_password" class="sr-only">Retype password</label>
+                            {{ form.retype_password(class='form-control', placeholder='Retype password') }}
+                        </div>
+                    {% endif %}
+
+                    <div class="form-group">
+                        <button style="width: 100%" class="btn btn-primary form-button" type="submit">Submit registration</button>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

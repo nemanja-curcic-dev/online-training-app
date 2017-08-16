@@ -1,0 +1,10 @@
+
+Hello, {{ user.first_name }}
+
+Welcome to Personal training diary!
+
+You must click on the following link to confirm your account!
+
+{{ url_for('auth_blueprint.confirm', token=token, _external=True) }}
+
+Your Personal training diary team.

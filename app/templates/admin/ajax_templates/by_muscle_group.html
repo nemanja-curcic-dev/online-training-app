@@ -1,0 +1,16 @@
+<div class="list-group">
+    {% for muscle_group in muscle_groups %}
+        <div class="list-group-item">
+            <a class="main_muscle_groups" href="#">{{ muscle_group.name }}</a>
+            <ul class="sub_muscle_groups" class="list-group" style="display: none;">
+                {% for sub_muscle_group in sub_muscle_groups %}
+                    {% for muscle in sub_muscle_group %}
+                        {% if muscle.main_muscle_group_id == muscle_group.id %}
+                            <li class="list-group-item"><a href="">{{ muscle.name }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+        </div>
+    {% endfor %}
+</div>
