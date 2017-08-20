@@ -40,6 +40,7 @@ def return_app(type):
     return app
 
 
+#helper functions
 def utc_to_local(utc_dt):
     from_zone = tz.tzutc()
     to_zone = tz.tzlocal()
@@ -47,3 +48,5 @@ def utc_to_local(utc_dt):
     utc_dt = utc_dt.replace(tzinfo=from_zone)
 
     return utc_dt.astimezone(to_zone)
+
+

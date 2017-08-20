@@ -26,7 +26,7 @@
                       <li><a name="/by_muscle_group" class="admin-ajax" href="{{ url_for('admin_blueprint.by_muscle_group') }}">By muscle group</a></li>
                       <li><a class="admin-ajax" href="#">Bodyweight</a></li>
                       <li><a class="admin-ajax" href="#">Weight</a></li>
-                      <li><a name="/add_exercise" class="admin-ajax" href="#">Add exercise</a></li>
+                      <li><a href="{{ url_for('admin_blueprint.add_exercise') }}">Add exercise</a></li>
                       <li><a class="admin-ajax" href="#">Delete exercise</a></li>
                       <li><a class="admin-ajax" href="#">Update exercise</a></li>
                   </ul>
@@ -54,16 +54,10 @@
 {% endblock %}
 
 {% block content %}
-    {{ super() }}
+    {% include 'breadcrumb.html' %}
+    {% include 'flashing_messages.html' %}
 
     <div class="container-fluid main-div">
-
-        <div class="row">
-            <div class="col-md-offset-1 col-md-10" id="main-content-area">
-
-            </div>
-        </div>
-
         <div class="row">
             <div class="col-md-offset-1 col-md-3">
                 <div class="list-group">

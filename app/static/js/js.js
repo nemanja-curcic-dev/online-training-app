@@ -1,27 +1,39 @@
 $(document).ready(function () {
-    admin_ajax();
+    add_exercise();
+});
 
-    $(document).on('click', '.main_muscle_groups', function (event) {
-        $('.sub_muscle_groups').css('display', 'block');
-    });
+/*
+* template: add_exercise.html
+* events regarding adding of exercises to the database
+* */
 
-    $(document).on('click', '.ajax-main-muscles', function (event) {
+
+
+function add_exercise() {
+
+    /*show sub muscle groups*/
+    $('.ajax-main-muscles').on('click', function (event) {
         event.preventDefault();
         var sub_muscle_class = $(this).attr('name');
         var div = $('.' + sub_muscle_class);
         div.toggle();
     });
 
-    $(document).on('click', '.ajax-sub-muscles', function (event) {
+    /*show muscles*/
+    $('.ajax-sub-muscles').on('click', function (event) {
         event.preventDefault();
         var muscle_class = $(this).attr('name');
         var div = $('.' + muscle_class);
         div.toggle();
     });
 
-    $(document).on('click', '.ajax-muscles', function (event) {
+    /*
+    * create dismissable div inside div #exercises_added
+    * add values to the list that is not shown but sent to the view function
+    * */
+    $('.ajax-muscles').on('click', function (event) {
         event.preventDefault();
-        var txt_area = $('#exercises_added');
+        var div_area = $('#exercises_added');
         var select_field = $('#muscles_involved');
 
         var div_dismiss = '<div style="font-size: 0.7em; margin-bottom: 1%;" class="alert alert-info alert-dismissable">' +
@@ -32,16 +44,20 @@ $(document).ready(function () {
             '' + $(this).html() + '</div>';
         var option = '<option selected="selected" id="' + "select_" + $(this).attr("id") + '" value="' + $(this).attr("id") + '">' + $(this).html() + '</option>';
 
-        txt_area.append(div_dismiss);
+        div_area.append(div_dismiss);
         select_field.append(option);
     });
 
+    /*remove selected muscle from div #exercises_added*/
     $(document).on('click', '.delete-muscle', function () {
         var selected_id = '#select_' + $(this).attr("name");
         $(selected_id).remove();
     });
 
-    $(document).on('click', '.prime-mover, .stabilizer, .synergist', function (event) {
+    /*
+    * assign the priority of the muscle to the exercise
+    * */
+    $(document).on('click','.prime-mover, .stabilizer, .synergist', function (event) {
         event.preventDefault();
         var selected_id = '#select_' + $(this).attr("name");
         var selected_class = $(this).attr('class');
@@ -49,41 +65,20 @@ $(document).ready(function () {
         switch (selected_class)
         {
             case 'close prime-mover':
-                $(selected_id).attr('name', '10');
-                $(this).css('color', 'green');
-                break;
-            case 'close stabilizer':
-                $(selected_id).attr('name', '5');
+                $(selected_id).attr('value', function() { return $(selected_id).attr("value") + "/10" });
                 $(this).css('color', 'green');
                 break;
             case 'close synergist':
-                $(selected_id).attr('name', '1');
-                $(this).css('color', '#green');
+                $(selected_id).attr('value', function() { return $(selected_id).attr("value") + "/5" });
+                $(this).css('color', 'green');
+                break;
+            case 'close stabilizer':
+                $(selected_id).attr('value', function() { return $(selected_id).attr("value") + "/1" });
+                $(this).css('color', 'green');
                 break;
             default:
                 break;
         }
     })
-
-});
-
-function admin_ajax() {
-    var elements = $('.admin-ajax');
-    var content_area = $('#main-content-area');
-
-    elements.on('click', function (event) {
-        event.preventDefault();
-
-        var route = $(this).attr('name');
-
-        $.ajax({
-            url: route,
-            type: 'POST',
-            success: function (response) {
-                content_area.html(response);
-            }
-        });
-    })
 }
-
 

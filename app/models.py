@@ -8,6 +8,7 @@ from datetime import datetime
 
 #user class
 class Users(db.Model, UserMixin):
+    """User class"""
     __tablename__ = 'users'
 
     id = db.Column(db.Integer, primary_key=True)

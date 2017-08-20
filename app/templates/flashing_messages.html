@@ -1,0 +1,18 @@
+<div class="container-fluid" style="background-color: rgba(36, 41, 46, 0.5)">
+<div class="row">
+    <div class="col-md-6 col-md-offset-3" style="margin-top: 1%;">
+       {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <ul class="flashes">
+            {% for message in messages %}
+              <div class="alert alert-info alert-dismissable">
+                  <button type="button" class="close" data-dismiss="alert">X</button>
+                  {{ message }}
+              </div>
+            {% endfor %}
+            </ul>
+          {% endif %}
+       {% endwith %}
+    </div>
+</div>
+</div>

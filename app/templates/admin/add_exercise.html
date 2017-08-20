@@ -1,6 +1,13 @@
-<div class="container-fluid">
+{% extends 'admin/admin.html' %}
+
+{% block content %}
+
+    {% include 'breadcrumb.html' %}
+    {% include 'flashing_messages.html' %}
+
+    <div class="container-fluid main-div">
     <div class="row">
-        <div class="col-md-12 form">
+        <div class="col-md-offset-1 col-md-10 form">
             <div class="row text-center">
                 <h3>Add exercise</h3>
             </div>
@@ -76,7 +83,7 @@
                     <button type="submit" style="width: 100%;" class="btn btn-primary form-button">Add exercise</button>
                 </div>
 
-                <select name="muscles" id="muscles_involved" multiple>
+                <select name="muscles" id="muscles_involved" multiple style="display: none;">
 
                 </select>
 
@@ -85,3 +92,5 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
