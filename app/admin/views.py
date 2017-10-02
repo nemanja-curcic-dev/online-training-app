@@ -18,16 +18,16 @@ from .helper_functions import is_admin, load_all_muscles, training_parser, multi
 def before_request():
     """Sets number of clients, exercises, trainings done, and last time
     that users were seen in the flask.g object"""
-    clients = db.engine.execute('SELECT COUNT(users.id) FROM users')
-    exercises = db.engine.execute('SELECT COUNT(id) FROM exercises')
-    trainings = db.engine.execute('SELECT COUNT(id) FROM training_session')
-    latest_seen = db.engine.execute('SELECT first_name, last_name, last_seen FROM users LIMIT 5')
+    clients = Users.query.count()
+    exercises = Exercises.query.count()
+    trainings = Exercises.query.count()
+    latest_seen = Users.query.limit(5)
 
     g.seen = []
 
     for ls in latest_seen:
-        if ls[2]:
-            g.seen.append(ls)
+        if ls.last_seen:
+            g.seen.append((ls.first_name, ls.last_name, ls.last_seen))
 
     g.seen.sort(key=lambda x: x[2], reverse=True)
 
@@ -35,14 +35,9 @@ def before_request():
         name = ' '.join((el[0], el[1]))
         g.seen[index] = ', '.join([datetime.strftime(utc_to_local(el[2]), '%a %d %b %Y %H:%M:%S'), name])
 
-    for cl in clients:
-        g.client_count = cl[0] - 1
-
-    for ex in exercises:
-        g.exercises_count = ex[0]
-
-    for tr in trainings:
-        g.training_count = tr[0]
+    g.client_count = clients - 1
+    g.exercises_count = exercises
+    g.training_count = trainings
 
 
 @admin_blueprint.route('/admin')
