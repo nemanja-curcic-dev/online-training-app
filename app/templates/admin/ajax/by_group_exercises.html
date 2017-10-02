@@ -1,0 +1,78 @@
+<ul class="list-group text-center" id="by_muscle_group_exercises">
+    <li class="list-group-item active" style="background-color: #24292e; border-color: #24292e;">Exercises for  {{ muscle_name|upper }}</li>
+    {% for eq in equipment %}
+        <li class="list-group-item"><a class="by_muscle_group" href="{{ eq[1] }}">
+            {{ eq[0] }}
+            {% for key, vals in exercises_muscles.items() %}
+                {% if key.equipment == eq[0].id %}
+                <li style="display: none;" class="list-group-item {{ eq[1] }}">
+                    <a class="by_muscle_group_exercise" href="{{key.id}}{{key.type}}" style="color: #24292e;" >{{ key|upper }}</a>
+                    <div class="{{key.id}}{{key.type}}" style="display: none;">
+                        <table class="table table-responsive table-bordered table-condensed">
+                            <tbody>
+                                <tr class="active">
+                                    <td>Utility</td>
+                                    <td>
+                                        {% if key.utility == 1 %}
+                                            Basic
+                                        {% elif key.utility == 2 %}
+                                            Auxiliary
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Mechanics</td>
+                                    <td>
+                                        {% if key.mechanics == 1 %}
+                                            Compound
+                                        {% elif key.mechanics == 2 %}
+                                            Isolated
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Type</td>
+                                    <td>
+                                        {% if key.type == 1 %}
+                                            Bodyweight
+                                        {% elif key.type == 2 %}
+                                            Weighted
+                                        {% else %}
+                                            Complex
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Force</td>
+                                    <td>{{ key.force|capitalize }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h4>Prime movers</h4>
+                        {% for val in vals %}
+                            {% if val[1] == 10 %}
+                            {{ val[0]|capitalize }}<br>
+                            {% endif %}
+                        {% endfor %}
+                        <h4>Synergists</h4>
+                        {% for val in vals %}
+                            {% if val[1] == 5 %}
+                            {{ val[0]|capitalize }}<br>
+                            {% endif %}
+                        {% endfor %}
+                        <h4>Stabilizers</h4>
+                        {% for val in vals %}
+                            {% if val[1] == 1 %}
+                            {{ val[0]|capitalize }}<br>
+                            {% endif %}
+                        {% endfor %}
+
+                    </div>
+                </li>
+                {% endif %}
+            {% endfor %}
+            </a>
+        </li>
+    {% endfor %}
+</ul>

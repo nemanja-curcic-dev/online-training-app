@@ -58,3 +58,47 @@ body{
     border: 1px solid #24292e;
 }
 
+.training-table{
+    border-radius: 7px;
+    border-color: gray;
+    border-collapse: collapse;
+}
+
+.training-table thead tr th{
+    border-color: gray;
+    border-collapse: collapse;
+}
+
+.training-table tbody tr td{
+    border-color: gray;
+    border-collapse: collapse;
+}
+
+/*-----------------clients profiles-----------------------*/
+#client_data td{
+    padding:2%;
+    text-align: center;
+    font-weight: bold;
+}
+
+.content-profiles-page{
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 7px;
+    color: #24292e;
+}
+
+#table-training-sessions{
+    border-spacing: 5px;
+    border-collapse: separate;
+    width: 100%;
+}
+
+#table-training-sessions td{
+    background-color: #337ab7;
+    padding: 1%;
+}
+
+#table-training-sessions td a{
+    color: white;
+    text-decoration: none;
+}

@@ -6,7 +6,7 @@ from flask_login import UserMixin
 from datetime import datetime
 
 
-#user class
+# user class
 class Users(db.Model, UserMixin):
     """User class"""
     __tablename__ = 'users'
@@ -16,10 +16,13 @@ class Users(db.Model, UserMixin):
     password_hash = db.Column(db.String(128))
     first_name = db.Column(db.String(40))
     last_name = db.Column(db.String(40))
+    weight = db.Column(db.Float)
+    height = db.Column(db.Float)
     date_registered = db.Column(db.DateTime(), default=datetime.utcnow)
     confirmed = db.Column(db.Boolean, default=False)
     is_administrator = db.Column(db.Boolean, default=False)
     last_seen = db.Column(db.DateTime(), default=datetime.utcnow)
+    has_new_training = db.Column(db.Boolean, default=False)
 
     def __init__(self, first_name='', last_name='', email='', password=''):
         super().__init__()
@@ -89,7 +92,7 @@ def load_user(user_id):
     return Users.query.filter_by(id=int(user_id)).first()
 
 
-#training session classes
+# training session classes
 class TrainingSession(db.Model):
     __tablename__ = 'training_session'
 
@@ -98,7 +101,7 @@ class TrainingSession(db.Model):
     date_created = db.Column(db.DateTime())
     training_goal = db.Column(db.String(60))
     training_type = db.Column(db.Integer)
-    session_exercises = db.relationship('TrainingSessionExercises', backref='training_session', lazy='dynamic')
+    annotations = db.Column(db.Text)
 
 
 class TrainingSessionExercises(db.Model):
@@ -106,20 +109,31 @@ class TrainingSessionExercises(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     training_session_id = db.Column(db.Integer, db.ForeignKey('training_session.id'))
-    training_part = db.Column(db.SmallInteger)
-    exercise = db.Column(db.Integer)
-    sets = db.Column(db.Integer)
-    reps = db.Column(db.Integer)
-    weight = db.Column(db.Integer)
+    exercise = db.Column(db.String(60))
+    sets = db.Column(db.String(50))
+    reps = db.Column(db.String(50))
+    resistance = db.Column(db.String(40))
+    ordinal_number = db.Column(db.SmallInteger)
+    session_exercises = db.relationship('TrainingSession', backref='exercises')
 
 
-#exercises and muscle groups classes
+class TrainingSessionMuscleGroups(db.Model):
+    __tablename__ = 'training_session_muscle_groups'
+
+    id = db.Column(db.Integer, primary_key=True)
+    training_session_id = db.Column(db.Integer, db.ForeignKey('training_session.id'))
+    muscle_group_id = db.Column(db.Integer)
+    session_muscle_groups = db.relationship('TrainingSession',
+                                            backref='training_muscle_groups')
+
+
+# exercises and muscle groups classes
 class MainMuscleGroups(db.Model):
     __tablename__ = 'main_muscle_groups'
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50))
-    sub_muscle_groups = db.relationship('SubMuscleGroups', backref='main_muscle_group', lazy='dynamic')
+    sub_muscle_groups = db.relationship('SubMuscleGroups', backref='main_muscle_group', lazy='select')
 
     def __repr__(self):
         return self.name.upper()
@@ -161,12 +175,37 @@ class Exercises(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100))
-    type = db.Column(db.SmallInteger) #bodyweight = 1 ; weighted = 2  ; can be both = 3
+    # bodyweight = 1 ; weighted = 2  ; can be both = 3
+    type = db.Column(db.SmallInteger)
+    # basic = 1 ; auxilary = 2 ;
+    utility = db.Column(db.SmallInteger)
     force = db.Column(db.String(5))
-    compound_isolated = db.Column(db.SmallInteger) #compound = 1 ; auxilary = 2 ;isolated = 3
+    # compound = 1 ; isolated = 2 ;
+    mechanics = db.Column(db.SmallInteger)
+    description = db.Column(db.Text)
+    instructions = db.Column(db.Text)
+    variation_of = db.Column(db.Integer)
+    percentage_of_bodyweight = db.Column(db.Float, default=0.0)
+    equipment = db.Column(db.Integer, db.ForeignKey('equipment.id'))
+    get_equipment = db.relationship('Equipment', backref='equipment', lazy='select')
+    muscles = db.relationship('Muscles', secondary=exercises_muscles,
+                              backref=db.backref('muscles', lazy='dynamic'),
+                              order_by=exercises_muscles.columns.priority.desc)
 
     def __repr__(self):
         return self.name
+
+
+class Equipment(db.Model):
+    __tablename__ = 'equipment'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100))
+
+    def __repr__(self):
+        return self.name.upper()
+
+
 
 
 

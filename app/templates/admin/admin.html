@@ -17,15 +17,21 @@
         </div>
         <div class="collapse navbar-collapse" id="admin_navbar">
             <ul class="nav navbar-nav">
-              <li class="active"><a href="{{ url_for('admin_blueprint.admin', id=current_user.id) }}">ADMIN PANEL</a></li>
-              <li><a href="#">CLIENTS</a></li>
+              <li class="active"><a href="{{ url_for('admin_blueprint.admin') }}">ADMIN PANEL</a></li>
+              <li class="dropdown">
+                  <a class="dropdown-toggle" data-toggle="dropdown" href="#">CLIENTS <span class="caret"></span></a>
+                  <ul class="dropdown-menu">
+                      <li><a href="{{ url_for('admin_blueprint.choose_client') }}">View client profiles</a></li>
+                      <li><a href="#">Update client profile</a></li>
+                      <li><a href="#">Delete client profile</a></li>
+                  </ul>
+              </li>
+
               <li class="dropdown">
                   <a class="dropdown-toggle" data-toggle="dropdown" href="#">EXERCISES
                       <span class="caret"></span></a>
                   <ul class="dropdown-menu">
-                      <li><a name="/by_muscle_group" class="admin-ajax" href="{{ url_for('admin_blueprint.by_muscle_group') }}">By muscle group</a></li>
-                      <li><a class="admin-ajax" href="#">Bodyweight</a></li>
-                      <li><a class="admin-ajax" href="#">Weight</a></li>
+                      <li><a name="/by_muscle_group" class="admin-ajax" href="{{ url_for('admin_blueprint.by_muscle_group') }}">Exercise directory</a></li>
                       <li><a href="{{ url_for('admin_blueprint.add_exercise') }}">Add exercise</a></li>
                       <li><a class="admin-ajax" href="#">Delete exercise</a></li>
                       <li><a class="admin-ajax" href="#">Update exercise</a></li>
@@ -41,7 +47,14 @@
                       <li><a href="#">Mobility</a></li>
                   </ul>
               </li>
-              <li><a href="#">TRAINING</a></li>
+              <li class="dropdown">
+                  <a class="dropdown-toggle" data-toggle="dropdown" href="#">TRAINING <span class="caret"></span></a>
+                  <ul class="dropdown-menu">
+                      <li><a href="{{ url_for('admin_blueprint.create_training') }}">Create training</a></li>
+                      <li><a href="#">Update training</a></li>
+                      <li><a href="#">Delete training</a></li>
+                  </ul>
+              </li>
               <li><a href="#">TEMPLATES</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">

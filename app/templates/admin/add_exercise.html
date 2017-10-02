@@ -21,7 +21,7 @@
                    <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
-                                {{ form.exercise_name(class='form-control', placeholder='Name of exercise') }}
+                                {{ form.exercise_name(class='form-control exercise', placeholder='Name of exercise') }}
                             </div>
                         </div>
                     </div>
@@ -29,7 +29,15 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
-                                {{ form.priority(class='form-control') }}
+                                {{ form.mechanics(class='form-control') }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                {{ form.utility(class='form-control') }}
                             </div>
                         </div>
                     </div>
@@ -49,6 +57,31 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                {{ form.equipment(class='form-control') }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                {{ form.description(class='form-control', placeholder='Description') }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                {{ form.instructions(class='form-control', placeholder='Instructions') }}
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
 
                 <div class="col-md-offset-1 col-md-4">

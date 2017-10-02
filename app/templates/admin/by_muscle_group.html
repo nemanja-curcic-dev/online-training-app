@@ -13,7 +13,7 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-md-offset-1 col-md-4">
+                    <div class="col-md-3">
                         <ul class="list-group text-center">
                             <li style="background-color: #24292e; border: 1px solid #24292e;" class="list-group-item active">Muscle groups</li>
                             {% for key, sub_muscles in dict_muscles.items() %}
@@ -26,7 +26,7 @@
                                                 <a class="ajax-sub-muscles" name="{{ key.id }}{{ sub_key.id }}" href="#">{{ sub_key }}</a>
                                                 <div class="{{ key.id }}{{ sub_key.id }}" style="display: none;">
                                                     {% for m in sub_val %}
-                                                        <a class="ajax-muscles" id="{{ m.id }}" href="#" style="color: #24292e;">{{ m }}</a><br>
+                                                        <a class="muscles-by-muscle-group" id="{{ m.id }}" href="#" style="color: #24292e;">{{ m }}</a><br>
                                                     {% endfor %}
                                                 </div>
                                             {% endfor %}
@@ -37,6 +37,11 @@
                             {% endfor %}
                         </ul>
                     </div>
+
+                    <div class="col-md-offset-1 col-md-8" id="by_muscle_group_div">
+
+                    </div>
+
                 </div>
 
             </div>

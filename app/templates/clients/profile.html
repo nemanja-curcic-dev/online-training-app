@@ -17,10 +17,13 @@
         <div class="collapse navbar-collapse" id="clients_navbar">
             <ul class="nav navbar-nav">
                 <li class="active">
-                    <a href="{{ url_for('clients_blueprint.profile', id=user.id) }}">
+                    <a href="{{ url_for('clients_blueprint.profile') }}">
                         Welcome, {{ user.first_name }}
                     </a>
                 </li>
+                <li><a href="#">TRAINING</a></li>
+                <li><a href="#">PROFILE</a></li>
+                <li><a href="#">HISTORY</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="{{ url_for('auth_blueprint.logout') }}"><span class="glyphicon glyphicon-log-out"></span> Log out</a></li>
@@ -28,4 +31,11 @@
         </div>
       </div>
     </nav>
+{% endblock %}
+
+{% block content %}
+    {% include 'breadcrumb.html' %}
+    {% include 'flashing_messages.html' %}
+
+
 {% endblock %}

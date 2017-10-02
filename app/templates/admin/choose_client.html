@@ -1,0 +1,21 @@
+{% extends 'admin/admin.html' %}
+
+{% block content %}
+
+    {% include 'breadcrumb.html' %}
+    {% include 'flashing_messages.html' %}
+
+    <div class="row main-div">
+        <div class="col-md-offset-4 col-md-4">
+            <form method="get" action="{{ url_for('admin_blueprint.clients_profiles') }}">
+                <div class="form-group">
+                    {{ form.clients_profiles(class='form-control') }}
+                </div>
+                <div class="form-group text-center">
+                    <button type="submit" class="btn btn-primary">View client profile</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}

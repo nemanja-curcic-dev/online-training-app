@@ -1,0 +1,143 @@
+{% extends 'admin/admin.html' %}
+
+{% block content %}
+
+    {% include 'breadcrumb.html' %}
+    {% include 'flashing_messages.html' %}
+
+    <div class="container-fluid main-div">
+        <div class="row">
+            <div class="col-md-12 form">
+                <div class="row text-center">
+                    <h3>Create training</h3>
+                </div>
+
+                <form id="create_training" method="post" action="{{ url_for('admin_blueprint.create_training') }}">
+
+                    {{ form.hidden_tag() }}
+                    {{ form.csrf_token }}
+
+                    <div class="row">
+                        <div class="col-md-9">
+                            <div class="col-md-4">
+                                <div class="form-group text-center">
+                                    <h4>Select client</h4>
+                                    {{ form.clients(class="form-control") }}
+                                </div>
+                            </div>
+
+                            <div class="col-md-offset-1 col-md-7">
+                                <div class="col-md-5">
+                                    <div class="form-group text-center">
+                                        <h4>Training goal</h4>
+                                        {{ form.training_goal(class="form-control") }}
+                                    </div>
+                                </div>
+                                <div class="col-md-offset-2 col-md-5">
+                                    <h4>Muscle groups</h4>
+                                    <div class="checkbox">
+                                        {{ form.muscle_groups_checkbox(class="checkbox-muscles") }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="display: none">
+                                {{ form.training(display='none') }}
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="col-md-4">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                {{ form.annotations(class='form-control', cols=15, rows=12, placeholder='Annotations') }}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                <div class="col-md-8">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered training-table table-responsive">
+                                            <thead>
+                                                <tr>
+                                                    <th></th>
+                                                    <th>Exercise</th>
+                                                    <th>Resistance</th>
+                                                    <th>Sets</th>
+                                                    <th>Reps</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="training-table">
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <button id="remove-exercise-row" class="glyphicon glyphicon-minus-sign"></button>
+                                    <button id="add-exercise-row" class="glyphicon glyphicon-plus-sign pull right"></button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                        <!-- sidebar charts for exercise data -->
+                        <div class="col-md-3">
+                            <div class="col-md-12" style="background-color: rgba(255,255,255,0.6); border-radius: 7px;">
+                                <div class="row text-center">
+                                <h4>Exercise data</h4>
+                                <div class="col-md-12">
+                                    <canvas id="canvas_exercise_0"></canvas>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="col-md-12">
+                                    <canvas id="canvas_exercise_1"></canvas>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="col-md-12">
+                                    <canvas id="canvas_exercise_2"></canvas>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <!-- training session data charts -->
+                    <div class="row" >
+                        <div class="col-md-12">
+                            <div class="col-md-12" style="background-color: rgba(255,255,255,0.6); border-radius: 7px; margin-top: 1%;">
+                                <div class="row text-center">
+                                <div class="form-group">
+                                    <select id="select-muscle-group"></select>
+                                    <span>Training session data</span>
+                                </div>
+                            </div>
+                            <div class="col-md-3" id="canvas_div_0">
+                                <canvas id="canvas_session_0"></canvas>
+                            </div>
+                            <div class="col-md-3" id="canvas_div_1">
+                                <canvas id="canvas_session_1"></canvas>
+                            </div>
+                            <div class="col-md-3" id="canvas_div_2">
+                                <canvas id="canvas_session_2"></canvas>
+                            </div>
+                            <div class="col-md-3" id="canvas_div_3">
+                                <canvas id="canvas_session_3"></canvas>
+                            </div>
+                            </div>
+                            </div>
+                        </div>
+                    <div class="row">
+                        <div class="col-md-12 text-center">
+                            <button id="submit_training">Submit training</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.js"></script>
+    {{ super() }}
+{% endblock %}

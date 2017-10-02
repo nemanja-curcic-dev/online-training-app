@@ -1,0 +1,60 @@
+{% extends 'admin/admin.html' %}
+
+{% block content %}
+
+    {% include 'breadcrumb.html' %}
+    {% include 'flashing_messages.html' %}
+
+    <div class="row main-div">
+        <div class="col-md-12">
+            <div class="col-md-3">
+                <input id="datepicker" type="text">
+                <div class="list-group">
+                    <a class="list-group-item">First name:  {{ client.first_name }}</a>
+                    <a class="list-group-item">Last name:  {{ client.last_name }}</a>
+                    <a class="list-group-item">Weight:  {{ client.weight }}kg</a>
+                    <a class="list-group-item">Height:  {{ client.height }}cm</a>
+                    <a class="list-group-item">Member since:  {{ client.date_registered }}</a>
+                    <a class="list-group-item">Last seen:  {{ client.last_seen }}</a>
+                </div>
+            </div>
+            <div class="col-md-6 text-center content-profiles-page">
+                <h4>Training history</h4>
+                <div class="row">
+                    <table cellspacing="5" id="table-training-sessions">
+                     <tr>
+                        {% for d in data.items() %}
+                         {% if d[0] % 4 == 0 and d[0] != 0 %}
+                             </tr>
+                             <tr>
+                            <td>
+                                <a class="training-session" href="session_{{ d[1][0] }}"><p>{{ d[1][1] }}</p>
+                                {% for mg in d[1][2] %}
+                                    {{ mg }}<br>
+                                {% endfor  %}
+                                </a>
+                             </td>
+                         {% else %}
+                             <td>
+                                <a class="training-session" href="session_{{ d[1][0] }}"><p>{{ d[1][1] }}</p>
+                                {% for mg in d[1][2] %}
+                                    {{ mg }}<br>
+                                {% endfor  %}
+                                </a>
+                             </td>
+                         {% endif %}
+                     {% endfor %}
+                     </table>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="col-md-12 content-profiles-page text-center">
+                    <h4>Personal records</h4>
+                </div>
+            </div>
+            </div>
+
+    </div>
+
+
+{% endblock %}
