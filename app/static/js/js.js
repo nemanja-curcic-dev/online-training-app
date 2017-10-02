@@ -8,9 +8,6 @@ $(document).ready(function () {
 
 function clients_profile_page() {
     var training_sessions = $('.training-session');
-    var datepicker = $('#datepicker');
-
-    datepicker.datepicker();
     
     training_sessions.on('click', function (event) {
         event.preventDefault();
