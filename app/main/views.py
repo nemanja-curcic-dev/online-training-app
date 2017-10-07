@@ -11,9 +11,9 @@ def before_request():
 
         if user:
             if user.is_administrator:
-                return redirect(url_for('admin_blueprint.admin', id=user.id))
+                return redirect(url_for('admin_blueprint.admin'))
             else:
-                return redirect(url_for('clients_blueprint.profile', id=user.id))
+                return redirect(url_for('clients_blueprint.profile'))
 
     return render_template('main/index.html')
 

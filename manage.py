@@ -3,7 +3,7 @@ from flask_script import Manager, Shell
 from flask_migrate import Migrate, MigrateCommand
 from app.models import Users, TrainingSession, TrainingSessionExercises, \
     MainMuscleGroups, SubMuscleGroups, Muscles, Exercises
-from app.admin import helper_functions
+from app.admin import admin_functions
 
 app = return_app('development')
 
@@ -15,7 +15,7 @@ def make_shell_context():
                 Users=Users, TrainingSession=TrainingSession,
                 TrainingSessionExercises=TrainingSessionExercises,
                 MainMuscleGroups=MainMuscleGroups, SubMuscleGroups=SubMuscleGroups,
-                Muscles=Muscles, Exercises=Exercises, helpers=helper_functions)
+                Muscles=Muscles, Exercises=Exercises, helpers=admin_functions)
 
 
 manager = Manager(app=app)

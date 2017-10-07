@@ -3,13 +3,12 @@ from . import admin_blueprint
 from ..models import Users, MainMuscleGroups, SubMuscleGroups, Muscles, Exercises, Equipment, \
     TrainingSession, TrainingSessionExercises, TrainingSessionMuscleGroups
 from flask_login import login_required, current_user
-from app import db, utc_to_local
-from _datetime import datetime
+from app import db
 from datetime import datetime as datetime_2
 from .forms import AddExercise, CreateTraining, ClientsProfiles
 from sqlalchemy.sql import text
-from .helper_functions import is_admin, load_all_muscles, training_parser, multiple_sessions_data,\
-    exercise_data, change_date_format
+from .admin_functions import is_admin, load_all_muscles, training_parser, multiple_sessions_data,\
+    exercise_data, calendar_data, load_data_before_request, training_session_by_id
 
 
 @admin_blueprint.before_request
@@ -18,26 +17,7 @@ from .helper_functions import is_admin, load_all_muscles, training_parser, multi
 def before_request():
     """Sets number of clients, exercises, trainings done, and last time
     that users were seen in the flask.g object"""
-    clients = Users.query.count()
-    exercises = Exercises.query.count()
-    trainings = Exercises.query.count()
-    latest_seen = Users.query.limit(5)
-
-    g.seen = []
-
-    for ls in latest_seen:
-        if ls.last_seen:
-            g.seen.append((ls.first_name, ls.last_name, ls.last_seen))
-
-    g.seen.sort(key=lambda x: x[2], reverse=True)
-
-    for index, el in enumerate(g.seen):
-        name = ' '.join((el[0], el[1]))
-        g.seen[index] = ', '.join([datetime.strftime(utc_to_local(el[2]), '%a %d %b %Y %H:%M:%S'), name])
-
-    g.client_count = clients - 1
-    g.exercises_count = exercises
-    g.training_count = trainings
+    load_data_before_request(g=g)
 
 
 @admin_blueprint.route('/admin')
@@ -252,26 +232,27 @@ def choose_client():
 @admin_blueprint.route('/clients_profiles', methods=['GET'])
 def clients_profiles():
     user_id = request.args.get('clients_profiles')
-    data = {}
 
     client = Users.query.filter_by(id=user_id).first()
-    training_sessions = TrainingSession.query.filter_by(user_id=client.id)\
-        .order_by(TrainingSession.date_created.desc()).limit(8)
-
-    index = 0
-
-    for tr in training_sessions:
-        muscle_group_ids = TrainingSessionMuscleGroups.query.filter_by(training_session_id=tr.id).all()
-        muscle_group_ids = [m.muscle_group_id for m in muscle_group_ids]
-        muscle_groups = MainMuscleGroups.query.filter(MainMuscleGroups.id.in_(muscle_group_ids)).all()
-        data[index] = (tr.id, change_date_format(str(tr.date_created), "%Y-%m-%d"), muscle_groups)
-        index += 1
-
-    print(data)
+    total_trainings_done = TrainingSession.query.filter_by(user_id=user_id).count()
+    muscle_groups = MainMuscleGroups.query.all()
+    muscles = muscle_groups.sub_muscle
 
     return render_template('admin/clients_profiles.html',
                            client=client,
-                           data=data)
+                           trainings_done=total_trainings_done,
+                           muscle_groups=muscle_groups)
+
+
+@admin_blueprint.route('/clients_training_session', methods=['POST'])
+def clients_training_session():
+    """Returns training session (exercises, reps, sets, resistance)"""
+    return json.dumps(training_session_by_id(request.json['session_id']))
+
+
+@admin_blueprint.route('/calendar_data', methods=['POST'])
+def return_calendar_data():
+    return json.dumps(calendar_data(request.json['month'], request.json['year']))
 
 
 # error handlers

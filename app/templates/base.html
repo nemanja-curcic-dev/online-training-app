@@ -2,13 +2,11 @@
 
 {% block styles %}
     {{ super() }}
-    <link rel="stylesheet" href="{{ url_for('static', filename='jquery-ui-1.12.1.custom/jquery-ui.min.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 {% endblock %}
 
 {% block scripts %}
     {{ super() }}
-    <script src="{{ url_for('static', filename='jquery-ui-1.12.1.custom/jquery-ui.min.css') }}"></script>
     <script src="{{ url_for('static', filename='js/js.js') }}"></script>
 {% endblock %}
 

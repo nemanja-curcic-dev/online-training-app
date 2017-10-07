@@ -1,5 +1,15 @@
 {% extends 'admin/admin.html' %}
 
+{% block styles %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/mine_calendar.css') }}">
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script src="{{ url_for('static', filename='js/mine_calendar.js') }}"></script>
+{% endblock %}
+
 {% block content %}
 
     {% include 'breadcrumb.html' %}
@@ -8,7 +18,6 @@
     <div class="row main-div">
         <div class="col-md-12">
             <div class="col-md-3">
-                <input id="datepicker" type="text">
                 <div class="list-group">
                     <a class="list-group-item">First name:  {{ client.first_name }}</a>
                     <a class="list-group-item">Last name:  {{ client.last_name }}</a>
@@ -20,36 +29,53 @@
             </div>
             <div class="col-md-6 text-center content-profiles-page">
                 <h4>Training history</h4>
-                <div class="row">
-                    <table cellspacing="5" id="table-training-sessions">
-                     <tr>
-                        {% for d in data.items() %}
-                         {% if d[0] % 4 == 0 and d[0] != 0 %}
-                             </tr>
-                             <tr>
-                            <td>
-                                <a class="training-session" href="session_{{ d[1][0] }}"><p>{{ d[1][1] }}</p>
-                                {% for mg in d[1][2] %}
-                                    {{ mg }}<br>
-                                {% endfor  %}
-                                </a>
-                             </td>
-                         {% else %}
-                             <td>
-                                <a class="training-session" href="session_{{ d[1][0] }}"><p>{{ d[1][1] }}</p>
-                                {% for mg in d[1][2] %}
-                                    {{ mg }}<br>
-                                {% endfor  %}
-                                </a>
-                             </td>
-                         {% endif %}
-                     {% endfor %}
-                     </table>
+                <div class="row" style="min-height: 300px;">
+                       <table id="calendar">
+                            <thead>
+                                <tr id="month">
+                                    <th style="text-align: center" colspan="1" ><a id="month_back" href="#">&lt&lt</a></th>
+                                    <th style="text-align: center" colspan="5" id="selected_month"></th>
+                                    <th style="text-align: center" colspan="1" ><a id="month_forward" href="#">&gt&gt</a></th>
+                                </tr>
+                                <tr id="days">
+                                    <th style="text-align: center; width: 14.2%">Mon</th>
+                                    <th style="text-align: center; width: 14.2%">Tue</th>
+                                    <th style="text-align: center; width: 14.2%">Wed</th>
+                                    <th style="text-align: center; width: 14.2%">Thu</th>
+                                    <th style="text-align: center; width: 14.2%">Fri</th>
+                                    <th style="text-align: center; width: 14.2%">Sat</th>
+                                    <th style="text-align: center; width: 14.2%">Sun</th>
+                                </tr>
+                            </thead>
+                            <tbody id="calendar_body">
+
+                            </tbody>
+                       </table>
+
+                        <div id="training-session-exercises"></div>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="col-md-12 content-profiles-page text-center">
                     <h4>Personal records</h4>
+                    <div class="list-group">
+                        <div class="list-group-item">Total trainings done: {{ trainings_done }}</div>
+                        <div id="trainings_current_month" class="list-group-item"></div>
+                        <div class="list-group-item">
+                            <div class="form-group">
+                                <h5>Personal record in exercises:</h5>
+                                <select class= name="pb_muscle_groups" id="">
+                                    {% for m in muscle_groups %}
+                                        <option value="{{ m.id }}">{{ m.name }}</option>
+                                    {% endfor %}
+                                </select>
+                                <br>
+                                <select id="pb_exercises">
+
+                                </select>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             </div>

@@ -75,30 +75,32 @@ body{
 }
 
 /*-----------------clients profiles-----------------------*/
-#client_data td{
-    padding:2%;
-    text-align: center;
-    font-weight: bold;
-}
 
 .content-profiles-page{
-    background-color: rgba(255, 255, 255, 0.7);
+    background-color: rgba(255, 255, 255, 0.9);
     border-radius: 7px;
     color: #24292e;
 }
 
-#table-training-sessions{
-    border-spacing: 5px;
+.table-training-sessions{
+    border-spacing: 1px;
     border-collapse: separate;
-    width: 100%;
+    margin: 1% auto 3% auto;
+    width: 90%;
 }
 
-#table-training-sessions td{
+.table-training-sessions th{
     background-color: #337ab7;
-    padding: 1%;
+    color: white;
+    text-align: center;
 }
 
-#table-training-sessions td a{
+.table-training-sessions td{
+    background-color: #337ab7;
+    color: white;
+}
+
+.table-training-sessions td a{
     color: white;
     text-decoration: none;
 }

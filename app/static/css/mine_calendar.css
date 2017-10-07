@@ -1,0 +1,35 @@
+#calendar{
+    border-radius: 7px;
+    border-collapse: separate;
+    border-spacing: 2px;
+    margin: 0 auto 2% auto;
+    height: 260px;
+    width: 90%;
+}
+
+#calendar thead{
+    background-color: #2aabd2;
+    border: 1px solid cornflowerblue;
+    color: white;
+}
+
+
+#calendar a{
+    text-decoration: none;
+    color: white;
+}
+
+.current-month-days{
+    background-color: #89b5fe;
+    color: white;
+}
+
+.current-day{
+    background-color: yellow;
+    color: #2aabd2;
+}
+
+.not-current-month-days{
+    background-color: lightgrey;
+    color: rgba(0, 0, 0, 0.4);
+}

@@ -139,7 +139,6 @@ function create_training() {
             success: function (response) {
                 if(!$.isEmptyObject(response))
                 {
-                    console.log(response);
                     create_exercise_chart(response);
                 }
             }

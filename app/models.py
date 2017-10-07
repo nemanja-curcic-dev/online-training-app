@@ -116,6 +116,9 @@ class TrainingSessionExercises(db.Model):
     ordinal_number = db.Column(db.SmallInteger)
     session_exercises = db.relationship('TrainingSession', backref='exercises')
 
+    def __repr__(self):
+        return self.exercise
+
 
 class TrainingSessionMuscleGroups(db.Model):
     __tablename__ = 'training_session_muscle_groups'
