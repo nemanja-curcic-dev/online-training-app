@@ -1,12 +1,13 @@
 from functools import wraps
 from flask_login import current_user
 from ..models import Users, MainMuscleGroups, SubMuscleGroups, Muscles, \
-    TrainingSession, Exercises, TrainingSessionExercises
+    TrainingSession, Exercises, TrainingSessionExercises, exercises_muscles
 from flask import abort
 import re
 import datetime
 import calendar
-from app import utc_to_local
+from app import utc_to_local, db
+from sqlalchemy.sql import text
 
 
 def is_admin(original_function):
@@ -146,6 +147,10 @@ def total_weight_lifted(exercise, user_id):
     user = Users.query.filter_by(id=user_id).first()
     ex = Exercises.query.filter_by(name=exercise.exercise).first()
 
+    if re.search('\+', exercise.reps):
+        return round((weight_lifted_parser(exercise) / 2 + user.weight * ex.percentage_of_bodyweight) * \
+                     int(rep_parser(exercise)), 2)
+
     return round((weight_lifted_parser(exercise) + user.weight * ex.percentage_of_bodyweight) *\
             int(rep_parser(exercise)), 2)
 
@@ -207,6 +212,7 @@ def multiple_sessions_data(user_id, muscle_group_ids):
 
 # exercise data functions
 def rep_exercise_parser(exercise):
+    """Returns number of reps done in one exercise"""
     reps = 0
 
     if re.search('\+', exercise.reps):
@@ -247,6 +253,7 @@ def exercise_data(user_id, exercise_name):
     return data_exercise
 
 
+# clients_profiles view
 def calendar_data(month, year):
     """Returns data that is inserted in calendar (dates of trainings, training session ids, etc.)"""
     number_of_days = calendar.monthrange(year, month)
@@ -270,7 +277,6 @@ def calendar_data(month, year):
 def training_session_by_id(session_id):
     training_session = TrainingSession.query.filter_by(id=session_id).first()
     exercises = training_session.exercises
-    date = change_date_format(str(training_session.date_created), "%a %b %d %Y")
 
     training_session_exercises = []
 
@@ -281,6 +287,71 @@ def training_session_by_id(session_id):
     return training_session_exercises
 
 
+def get_exercises_by_muscles(main_muscle_group_id):
+    """Returns exercises for specific muscle group"""
+    sub_muscle_groups = SubMuscleGroups.query.filter_by(main_muscle_group_id=main_muscle_group_id).all()
+    muscles = []
+    exercises = []
+    data = []
+    data_dict = {}
+
+    for s in sub_muscle_groups:
+        muscles += Muscles.query.filter_by(sub_muscle_group_id=s.id).all()
+
+    sql_statement = "SELECT exercises.name, exercises.type FROM exercises, exercises_muscles \
+                     WHERE exercises.id = exercises_muscles.exercise_id \
+                     AND exercises_muscles.muscle_id = :muscle_id AND exercises_muscles.priority = 10"
+
+    for m in muscles:
+        exercises.append([p for p in db.engine.execute(text(sql_statement), muscle_id=m.id)])
+
+    for ex in exercises:
+        data += [[e[0], e[1]] for e in ex]
+
+    for d in data:
+        if d[0] not in data_dict:
+            data_dict[d[0]] = d[1]
+        else:
+            pass
+
+    return data_dict
+
+
+def get_records_for_exercise(exercise, type_of, client_id):
+    training_sessions = TrainingSession.query.filter_by(user_id=client_id).all()
+    exercises = []
+    exercise = exercise.strip('')
+    data = []
+    return_data = {}
+
+    for session in training_sessions:
+        ex = TrainingSessionExercises.query.\
+             filter(TrainingSessionExercises.training_session_id == session.id,
+                   TrainingSessionExercises.exercise == exercise).first()
+        if ex:
+            exercises.append(ex)
+
+    if type_of == 1:
+        pass
+    elif type_of == 2:
+        return_data["type_2"] = []
+        for e in exercises:
+            print("exercise: ", e.reps)
+            if re.search('\+', e.reps):
+                data.append((e.resistance, rep_exercise_parser(e) * weight_lifted_parser(e) / 2))
+            else:
+                data.append((e.resistance, rep_exercise_parser(e) * weight_lifted_parser(e)))
+        data.sort(key=lambda x: x[0], reverse=True)
+        return_data["type_2"].append(data[0][0])
+        data.sort(key=lambda x: x[1], reverse=True)
+        return_data["type_2"].append(str(data[0][1])+"kg")
+    elif type_of == 3:
+        pass
+
+    return return_data
+
+
+# date changer
 def change_date_format(date, format):
     """Returns adequate date format for chart representation"""
     return datetime.datetime.strptime(date, "%Y-%m-%d %H:%M:%S").strftime(format)
