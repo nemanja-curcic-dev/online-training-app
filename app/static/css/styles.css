@@ -104,3 +104,70 @@ body{
     color: white;
     text-decoration: none;
 }
+
+
+/*********************client pages***************************/
+
+.container{
+    margin-bottom: 1%;
+}
+
+.message-board{
+    background: white;
+    border-radius: 7px;
+    border: 1px solid #e2e2e2;
+    box-shadow: 5px 5px 5px #efefef;
+    margin: 1%;
+}
+
+.client-message{
+    display: flex;
+    padding: 25px;
+    height: auto;
+}
+
+.client-message-icon{
+   flex-basis: 10%;
+}
+
+.client-message-text{
+    box-sizing: border-box;
+    flex-basis: 70%;
+    margin: 10px 5%;
+}
+
+.client-message-show-less{
+    height: 90px;
+    overflow: hidden;
+}
+
+.client-message-show-more{
+    height: auto;
+}
+
+.read-more, .show-less{
+    margin: 7px;
+}
+
+.client-message a:hover{
+    text-decoration: none;
+}
+
+.client-message h5{
+    font-weight: bold;
+}
+
+span.remove{
+    cursor: pointer;
+}
+
+
+/*******glyphicons customization***********/
+.glyphicon.glyphicon-arrow-right, .glyphicon.glyphicon-arrow-left{
+    font-size: 10px;
+    color: #337ab7;
+}
+
+.glyphicon.glyphicon-file {
+    font-size: 35px;
+}

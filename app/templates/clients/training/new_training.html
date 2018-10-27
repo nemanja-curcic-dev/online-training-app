@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block navbar %}
+{% include 'clients/client_navbar.html' %}
+{% endblock %}
+
+{% block styles %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/mine_calendar.css') }}">
+{% endblock %}
+
+{% block content %}
+    {% include 'breadcrumb.html' %}
+    {% include 'flashing_messages.html' %}
+
+    <div class="container">
+        <div class="row text-center">
+            <div class="training col-md-8 col-sm-12">
+                <div class="training-session">
+
+                </div>
+            </div>
+            <div class="calendar col-md-4 col-sm-12">
+                 <table id="calendar">
+                    <thead>
+                        <tr id="month">
+                            <th style="text-align: center" colspan="1" ><a id="month_back" href="#">&lt&lt</a></th>
+                            <th style="text-align: center" colspan="5" id="selected_month"></th>
+                            <th style="text-align: center" colspan="1" ><a id="month_forward" href="#">&gt&gt</a></th>
+                        </tr>
+                        <tr id="days">
+                            <th style="text-align: center; width: 14.2%">Mon</th>
+                            <th style="text-align: center; width: 14.2%">Tue</th>
+                            <th style="text-align: center; width: 14.2%">Wed</th>
+                            <th style="text-align: center; width: 14.2%">Thu</th>
+                            <th style="text-align: center; width: 14.2%">Fri</th>
+                            <th style="text-align: center; width: 14.2%">Sat</th>
+                            <th style="text-align: center; width: 14.2%">Sun</th>
+                        </tr>
+                    </thead>
+                    <tbody id="calendar_body">
+
+                    </tbody>
+               </table>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+
+{% block scripts %}
+    {{ super() }}
+    <script src="{{ url_for('static', filename='js/mine_calendar.js') }}"></script>
+{% endblock %}

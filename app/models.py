@@ -6,6 +6,19 @@ from flask_login import UserMixin
 from datetime import datetime
 
 
+users_tests = db.Table('users_tests',
+                       db.Column('user_id', db.Integer, db.ForeignKey('users.id')),
+                       db.Column('test_id', db.Integer, db.ForeignKey('tests.id')),
+                       db.Column('done_timestamp', db.Integer),
+                       db.Column('result', db.String(50)))
+
+
+exercises_muscles = db.Table('exercises_muscles',
+                             db.Column('exercise_id', db.Integer, db.ForeignKey('exercises.id')),
+                             db.Column('muscle_id', db.Integer, db.ForeignKey('muscles.id')),
+                             db.Column('priority', db.SmallInteger))
+
+
 # user class
 class Users(db.Model, UserMixin):
     """User class"""
@@ -23,6 +36,10 @@ class Users(db.Model, UserMixin):
     is_administrator = db.Column(db.Boolean, default=False)
     last_seen = db.Column(db.DateTime(), default=datetime.utcnow)
     has_new_training = db.Column(db.Boolean, default=False)
+    first_time = db.Column(db.Boolean, default=False)
+
+    users_tests = db.relationship('Tests', secondary=users_tests,
+                     backref=db.backref('tests', lazy='dynamic'))
 
     def __init__(self, first_name='', last_name='', email='', password=''):
         super().__init__()
@@ -102,6 +119,7 @@ class TrainingSession(db.Model):
     training_goal = db.Column(db.String(60))
     training_type = db.Column(db.Integer)
     annotations = db.Column(db.Text)
+    done = db.Column(db.Boolean, default=False)
 
 
 class TrainingSessionExercises(db.Model):
@@ -154,12 +172,6 @@ class SubMuscleGroups(db.Model):
         return self.name.upper()
 
 
-exercises_muscles = db.Table('exercises_muscles',
-                             db.Column('exercise_id', db.Integer, db.ForeignKey('exercises.id')),
-                             db.Column('muscle_id', db.Integer, db.ForeignKey('muscles.id')),
-                             db.Column('priority', db.SmallInteger))
-
-
 class Muscles(db.Model):
     __tablename__ = 'muscles'
 
@@ -194,6 +206,8 @@ class Exercises(db.Model):
     muscles = db.relationship('Muscles', secondary=exercises_muscles,
                               backref=db.backref('muscles', lazy='dynamic'),
                               order_by=exercises_muscles.columns.priority.desc)
+    img_link = db.Column(db.String(64))
+    video_description = db.Column(db.String(256))
 
     def __repr__(self):
         return self.name
@@ -208,6 +222,20 @@ class Equipment(db.Model):
     def __repr__(self):
         return self.name.upper()
 
+
+class Tests(db.Model):
+    __tablename__ = 'tests'
+
+    id = db.Column(db.Integer, primary_key=True)
+    test_name = db.Column(db.String(100))
+    test_category = db.Column(db.String(64))
+    description = db.Column(db.Text)
+    img_url = db.Column(db.String(64))
+    video_url = db.Column(db.String(256))
+    alone = db.Column(db.Boolean, default=False)
+
+    def __repr__(self):
+        return self.test_name
 
 
 

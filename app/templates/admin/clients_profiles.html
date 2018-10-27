@@ -64,16 +64,21 @@
                         <div class="list-group-item">
                             <div class="form-group">
                                 <h5>Personal record in exercises:</h5>
-                                <select class= name="pb_muscle_groups" id="">
+                                <select id="pb_muscle_groups">
                                     {% for m in muscle_groups %}
                                         <option value="{{ m.id }}">{{ m.name }}</option>
                                     {% endfor %}
                                 </select>
                                 <br>
-                                <select id="pb_exercises">
-
+                                <select id="pb_exercises" style="width: 90%;">
+                                    {% for key, value in exercises.items() %}
+                                        <option value="{{ value }}">{{ key }}</option>
+                                    {% endfor %}
                                 </select>
                             </div>
+                        </div>
+                        <div class="list-group-item" id="pb_records" style="display: none">
+
                         </div>
                     </div>
                 </div>

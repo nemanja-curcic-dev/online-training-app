@@ -4,22 +4,65 @@ $(document).ready(function () {
     by_muscle_group();
     create_training();
     clients_profile_page();
+    hideMessage();
+    $('[data-toggle="tooltip"]').tooltip();
 });
 
 function clients_profile_page() {
-    var training_sessions = $('.training-session');
-    
-    training_sessions.on('click', function (event) {
-        event.preventDefault();
-        var id = $(this).attr('href').split('_')[1];
+    var muscle_groups = $('#pb_muscle_groups');
+    var exercises = $('#pb_exercises');
+
+    muscle_groups.on('change', function () {
+        var group_id = this.value;
 
         $.ajax({
-            url: '/clients_profiles',
-            data: JSON.stringify({session_id: id}),
-            contentType: 'application/json',
+            url: '/clients_profiles_load_exercises',
+            data: JSON.stringify({group_id: group_id}),
             type: 'POST',
-            success: function () {
+            contentType: 'application/json',
+            success: function (response) {
 
+                response = JSON.parse(response);
+                exercises.html('');
+
+                for(var key in response)
+                {
+                    var option = $('<option>',{value: response[key], data: key});
+                    option.text(key);
+                    exercises.append(option);
+                }
+            }
+        });
+    });
+
+    exercises.on('change', function () {
+        var type = this.value;
+        var exercise = $('#pb_exercises option:selected').text();
+
+        $.ajax({
+            url: '/clients_profiles_load_records',
+            data: JSON.stringify({exercise: exercise, type: type}),
+            type: 'POST',
+            contentType: 'application/json',
+            success: function (response) {
+                response = JSON.parse(response);
+                var key = Object.keys(response)[0];
+                var pb_records = $('#pb_records');
+
+                switch (key)
+                {
+                    case "type_1":
+                        break;
+                    case "type_2":
+                        var text = "";
+                        text += "<p>Maximum weight lifted: " + response[key][0] + "</p>";
+                        text += "<p>Maximum volume in one set: " + response[key][1] + "</p>";
+                        pb_records.css('display', 'block');
+                        pb_records.html(text);
+                        break;
+                    case "type_3":
+                        break;
+                }
             }
         });
     });
@@ -416,6 +459,50 @@ function create_training_session_chart(training_session_data, muscle_group)
                 }
         });
     }
+}
 
+function hideMessage() {
+    var messages = $('.client-message');
+
+    for(var i = 0; i < messages.length; i++) {
+
+        if(messages[i].clientHeight >= 90) {
+            var message = $(messages[i]);
+
+            message.addClass('client-message-show-less');
+
+            var readMore = $('.read-more');
+            var showLess = $('.show-less');
+
+            readMore.css('display', 'block');
+            readMore.on('click', function (e) {
+                e.preventDefault();
+                message.removeClass('client-message-show-less');
+                message.addClass('client-message-show-more');
+
+                $(this).css('display', 'none');
+
+                showLess.css('display', 'block');
+
+                showLess.on('click', function (e) {
+                   e.preventDefault();
+
+                   message.removeClass('client-message-show-more');
+                   message.addClass('client-message-show-less');
+
+                   readMore.css('display', 'block');
+                   $(this).css('display', 'none');
+                });
+            });
+
+            var dismiss = $('span.remove');
+
+            dismiss.on('click', function (e) {
+                message.remove();
+                readMore.remove();
+                showLess.remove();
+            });
+        }
+    }
 }
 

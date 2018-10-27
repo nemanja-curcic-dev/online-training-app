@@ -8,7 +8,11 @@ from datetime import datetime as datetime_2
 from .forms import AddExercise, CreateTraining, ClientsProfiles
 from sqlalchemy.sql import text
 from .admin_functions import is_admin, load_all_muscles, training_parser, multiple_sessions_data,\
-    exercise_data, calendar_data, load_data_before_request, training_session_by_id
+    exercise_data, calendar_data, load_data_before_request, training_session_by_id, get_exercises_by_muscles,\
+    get_records_for_exercise
+
+# used for fetching data about clients
+client_id = None
 
 
 @admin_blueprint.before_request
@@ -231,17 +235,31 @@ def choose_client():
 
 @admin_blueprint.route('/clients_profiles', methods=['GET'])
 def clients_profiles():
-    user_id = request.args.get('clients_profiles')
+    global client_id
+    client_id = request.args.get('clients_profiles')
 
-    client = Users.query.filter_by(id=user_id).first()
-    total_trainings_done = TrainingSession.query.filter_by(user_id=user_id).count()
+    client = Users.query.filter_by(id=client_id).first()
+    total_trainings_done = TrainingSession.query.filter_by(user_id=client_id).count()
     muscle_groups = MainMuscleGroups.query.all()
-    muscles = muscle_groups.sub_muscle
+    exercises = get_exercises_by_muscles(muscle_groups[0].id)
 
     return render_template('admin/clients_profiles.html',
                            client=client,
                            trainings_done=total_trainings_done,
-                           muscle_groups=muscle_groups)
+                           muscle_groups=muscle_groups,
+                           exercises=exercises)
+
+
+@admin_blueprint.route('/clients_profiles_load_exercises', methods=['POST'])
+def clients_profiles_load_exercises():
+    exercises = get_exercises_by_muscles(int(request.json['group_id']))
+    return json.dumps(exercises)
+
+
+@admin_blueprint.route('/clients_profiles_load_records', methods=['POST'])
+def clients_profiles_load_records():
+    global client_id
+    return json.dumps(get_records_for_exercise(request.json['exercise'], int(request.json['type']), client_id))
 
 
 @admin_blueprint.route('/clients_training_session', methods=['POST'])

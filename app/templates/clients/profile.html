@@ -1,41 +1,119 @@
 {% extends 'base.html' %}
 
 {% block navbar %}
-    <nav class="navbar navbar-inverse" style="margin-bottom: 0; border-radius:0;">
-      <div class="container-fluid">
-         <div class="navbar-header">
-           <a class="navbar-brand">
-               <span class="glyphicon glyphicon-home" style="color: white"></span>
-               <span style="color: white; font-weight: bold;">PERSONAL TRAINING DIARY</span>
-           </a>
-           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#clients_navbar">
-             <span class="icon-bar"></span>
-             <span class="icon-bar"></span>
-             <span class="icon-bar"></span>
-           </button>
-        </div>
-        <div class="collapse navbar-collapse" id="clients_navbar">
-            <ul class="nav navbar-nav">
-                <li class="active">
-                    <a href="{{ url_for('clients_blueprint.profile') }}">
-                        Welcome, {{ user.first_name }}
-                    </a>
-                </li>
-                <li><a href="#">TRAINING</a></li>
-                <li><a href="#">PROFILE</a></li>
-                <li><a href="#">HISTORY</a></li>
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-                <li><a href="{{ url_for('auth_blueprint.logout') }}"><span class="glyphicon glyphicon-log-out"></span> Log out</a></li>
-            </ul>
-        </div>
-      </div>
-    </nav>
+{% include 'clients/client_navbar.html' %}
+{% endblock %}
+
+{% block styles %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/mine_calendar.css') }}">
 {% endblock %}
 
 {% block content %}
     {% include 'breadcrumb.html' %}
     {% include 'flashing_messages.html' %}
 
+    <div class="container" style="margin-top: 2%">
+        <div class="row">
+            <div class="col-md-3 text-center">
+                 <div class="list-group">
+                    <a class="list-group-item">First name:  {{ current_user.first_name }}</a>
+                    <a class="list-group-item">Last name:  {{ current_user.last_name }}</a>
+                    <a class="list-group-item">Weight:  {{ current_user.weight }}kg</a>
+                    <a class="list-group-item">Height:  {{ current_user.height }}cm</a>
+                </div>
+            </div>
+            <div class="col-md-6 text-center">
+                <div class="message-board">
+                    <h4>Message board <span class="glyphicon glyphicon-list-alt"></span></h4>
+                    {% if current_user.users_tests == [] %}
+                        <hr>
+                        <div class="client-message">
+                            <div class="client-message-icon">
+                                <span class="glyphicon glyphicon-file"></span>
+                            </div>
+                            <div class="client-message-text">
+                                 <h5>Hi, {{ current_user.first_name }}. Welcome to the personal training diary!</h5>
+                                 <p>
+                                     Before you start with training you should perform some basic tests that you can do by yourself, so you can track progress later on.
+                                     You can find them in the tests category. Some of the basic ones you should do are:
+                                 </p>
+                                 {% for test in tests %}
+                                     <ul>
+                                        <li>{{ test.test_name }}</li>
+                                     </ul>
+                                 {% endfor %}
+                            </div>
+                            <div class="client-message-icon">
+                                <span data-toggle="tooltip" title="Dismiss message." class="glyphicon glyphicon-remove remove"></span>
+                            </div>
+                        </div>
+                        <div class="read-more" style="display: none;">
+                            <a href="">Read more <span class="glyphicon glyphicon-arrow-right"></span></a>
+                        </div>
+                        <div class="show-less" style="display: none;">
+                            <a href="">Show less <span class="glyphicon glyphicon-arrow-left"></span></a>
+                        </div>
+                    {% endif %}
+                    <hr>
+                    {% if users_tests|length != 0 %}
+                        <div class="client-message">
+                            <div class="client-message-icon">
+                                <span class="glyphicon glyphicon-file"></span>
+                            </div>
+                            <div class="client-message-text">
+                                 <h5>There are more tests that you should do!</h5>
+                                 <p>
+                                     You should do them, it is important to track progress!
+                                 </p>
+                                 {% for test in users_tests %}
+                                     <ul>
+                                        <li>{{ test.test_name }}</li>
+                                     </ul>
+                                 {% endfor %}
+                            </div>
+                            <div class="client-message-icon">
+                                <span data-toggle="tooltip" title="Dismiss message." class="glyphicon glyphicon-remove remove"></span>
+                            </div>
+                        </div>
+                        <div class="read-more" style="display: none;">
+                            <a href="">Read more <span class="glyphicon glyphicon-arrow-right"></span></a>
+                        </div>
+                        <div class="show-less" style="display: none;">
+                            <a href="">Show less <span class="glyphicon glyphicon-arrow-left"></span></a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-md-3 text-center">
+                <table id="calendar">
+                    <thead>
+                        <tr id="month">
+                            <th style="text-align: center" colspan="1" ><a id="month_back" href="#">&lt&lt</a></th>
+                            <th style="text-align: center" colspan="5" id="selected_month"></th>
+                            <th style="text-align: center" colspan="1" ><a id="month_forward" href="#">&gt&gt</a></th>
+                        </tr>
+                        <tr id="days">
+                            <th style="text-align: center; width: 14.2%">Mon</th>
+                            <th style="text-align: center; width: 14.2%">Tue</th>
+                            <th style="text-align: center; width: 14.2%">Wed</th>
+                            <th style="text-align: center; width: 14.2%">Thu</th>
+                            <th style="text-align: center; width: 14.2%">Fri</th>
+                            <th style="text-align: center; width: 14.2%">Sat</th>
+                            <th style="text-align: center; width: 14.2%">Sun</th>
+                        </tr>
+                    </thead>
+                    <tbody id="calendar_body">
 
+                    </tbody>
+               </table>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script src="{{ url_for('static', filename='js/mine_calendar.js') }}"></script>
 {% endblock %}

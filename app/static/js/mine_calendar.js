@@ -197,6 +197,13 @@ function global() {
                         el.text('');
                         el.html(a);
                     }
+                    else if(Date.parse($(element).attr('data')) >= Date.parse(new Date().toDateString())){
+                        var number_day = $(element).text();
+                        var create_training = $("<a>", {href:'/create_training'});
+                        $(element).html('');
+                        create_training.text(number_day);
+                        $(element).html(create_training);
+                    }
                 });
 
                 $('[data-toggle="tooltip"]').tooltip();

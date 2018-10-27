@@ -1,6 +1,6 @@
 from flask import render_template, abort, flash, g
 from . import clients_blueprint
-from ..models import Users
+from ..models import Users, Tests
 from flask_login import login_required, current_user
 from app import db
 from .helper_functions import is_client
@@ -27,9 +27,32 @@ def before_request():
 @login_required
 @is_client
 def profile():
-    user = Users.query.filter_by(id=current_user.id).first()
+    tests = Tests.query.filter_by(alone=True).all()
+    users_tests = []
 
-    if user is None:
-        abort(404)
+    if len(current_user.users_tests) != 0:
+        users_tests = current_user.users_tests
+        users_tests = filter(lambda x: x in tests, users_tests)
 
-    return render_template('clients/profile.html', user=user)
+    return render_template('clients/profile.html', user=current_user, tests=tests, users_tests=users_tests)
+
+
+@clients_blueprint.route('/clients/training/new_training')
+@login_required
+@is_client
+def new_training():
+    return render_template('clients/training/new_training.html', user=current_user)
+
+
+@clients_blueprint.route('/clients/training/training_history')
+@login_required
+@is_client
+def training_history():
+    return render_template('clients/training/training_history.html', user=current_user)
+
+
+@clients_blueprint.route('/clients/tests')
+@login_required
+@is_client
+def tests():
+    return render_template('clients/tests.html', user=current_user)
