@@ -1,9 +1,11 @@
-from flask import render_template, abort, flash, g
+import json
+
+from flask import render_template, request, flash
 from . import clients_blueprint
 from ..models import Users, Tests
 from flask_login import login_required, current_user
 from app import db
-from .helper_functions import is_client
+from .helper_functions import is_client, client_training_sessions
 
 
 @clients_blueprint.before_request
@@ -56,3 +58,13 @@ def training_history():
 @is_client
 def tests():
     return render_template('clients/tests.html', user=current_user)
+
+
+#------------------------------ api methods -----------------------------------#
+
+
+@clients_blueprint.route('/clients/training_sessions')
+@login_required
+@is_client
+def get_training_sessions():
+  return json.dumps(client_training_sessions(current_user.id))

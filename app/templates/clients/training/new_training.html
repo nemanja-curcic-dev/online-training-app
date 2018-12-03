@@ -10,11 +10,13 @@
 {% endblock %}
 
 {% block content %}
+    {{ super() }}
     {% include 'breadcrumb.html' %}
     {% include 'flashing_messages.html' %}
 
     <div class="container">
         <div class="row text-center">
+          <new-training></new-training>
             <div class="training col-md-8 col-sm-12">
                 <div class="training-session">
 

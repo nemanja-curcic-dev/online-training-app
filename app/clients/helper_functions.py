@@ -1,4 +1,4 @@
-from ..models import Users
+from ..models import Users, TrainingSession
 from functools import wraps
 from flask_login import current_user
 from flask import abort
@@ -18,3 +18,9 @@ def is_client(original_function):
         else:
             return abort(403)
     return wrapper
+
+
+def client_training_sessions(id):
+  sessions = TrainingSession.query.filter_by(user_id=id).all()
+  sessions = [(el.id, el.user_id) for el in sessions]
+  return sessions
