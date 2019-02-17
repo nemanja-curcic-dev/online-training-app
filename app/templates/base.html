@@ -8,7 +8,7 @@
 {% block scripts %}
     {{ super() }}
     <script src="{{ url_for('static', filename='js/js.js') }}"></script>
-    <script src="http://localhost:8081/dist/build.js"></script>
+    <script src="{{ url_for('static', filename='build.js') }}"></script>
 {% endblock %}
 
 {% block navbar %}
