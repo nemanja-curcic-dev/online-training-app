@@ -118,7 +118,7 @@
         getExerciseData(){
           let self = this;
 
-          fetch('/return_exercise_data', {
+          fetch('/api/return_exercise_data', {
             method: 'POST',
             headers: {
               'Accept': 'application/json',
