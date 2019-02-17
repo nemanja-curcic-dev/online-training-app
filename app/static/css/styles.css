@@ -161,6 +161,19 @@ span.remove{
     cursor: pointer;
 }
 
+.nav-wrapper{
+    display: flex;
+    text-align: center;
+}
+
+.nav-button{
+  flex-grow: 1;
+}
+
+.btn{
+  border-radius: 0;
+}
+
 
 /*******glyphicons customization***********/
 .glyphicon.glyphicon-arrow-right, .glyphicon.glyphicon-arrow-left{
@@ -170,4 +183,11 @@ span.remove{
 
 .glyphicon.glyphicon-file {
     font-size: 35px;
+}
+
+/***************media queries****************/
+@media screen and (max-width: 368px){
+  #personal-training-diary{
+    font-size: 0.8em;
+  }
 }

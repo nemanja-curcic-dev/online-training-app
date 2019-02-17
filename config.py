@@ -13,7 +13,7 @@ class Config:
     mysql_password = os.environ['MYSQL_PASSWORD']
 
     SQLALCHEMY_DATABASE_URI = 'mysql://' + mysql_username + ':' + \
-                              mysql_password + '@localhost/online-training-app?charset=utf8'
+                              mysql_password + '@localhost/online_training_app?charset=utf8'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 

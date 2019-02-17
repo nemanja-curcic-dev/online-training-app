@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block navbar %}
+{% include 'clients/client_navbar.html' %}
+{% endblock %}
+
+{% block styles %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/mine_calendar.css') }}">
+{% endblock %}
+
+{% block content %}
+    {% include 'flashing_messages.html' %}
+    <div id="training-app">
+      <statistics user_id="{{ user.id }}"></statistics>
+    </div>
+{% endblock %}
+
+
+{% block scripts %}
+    {{ super() }}
+    <script src="{{ url_for('static', filename='js/mine_calendar.js') }}"></script>
+{% endblock %}

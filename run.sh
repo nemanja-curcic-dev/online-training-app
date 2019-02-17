@@ -5,7 +5,7 @@
 # Created by Nemanja Curcic
 
 # Global declarations
-location="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/env"
+location="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/venv"
 
 
 # activate virtual enviroment

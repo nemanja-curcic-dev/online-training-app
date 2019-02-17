@@ -7,8 +7,7 @@ from app import db
 from datetime import datetime as datetime_2
 from .forms import AddExercise, CreateTraining, ClientsProfiles
 from sqlalchemy.sql import text
-from .admin_functions import is_admin, load_all_muscles, training_parser, multiple_sessions_data,\
-    exercise_data, calendar_data, load_data_before_request, training_session_by_id, get_exercises_by_muscles,\
+from .admin_functions import is_admin, load_all_muscles, training_parser, multiple_sessions_data, load_data_before_request,   get_exercises_by_muscles,\
     get_records_for_exercise
 
 # used for fetching data about clients
@@ -206,11 +205,6 @@ def return_training_session_volumes():
     return jsonify(multiple_sessions_data(int(request.json['user_id']), [int(x) for x in request.json['muscle_ids']]))
 
 
-@admin_blueprint.route('/return_exercise_data', methods=['POST'])
-def return_exercise_data():
-    return jsonify(exercise_data(int(request.json['user_id']), request.json['ex']))
-
-
 @admin_blueprint.route('/add_sub_muscle_group', methods=['POST'])
 def add_sub_muscle_group():
     id = request.form['id']
@@ -260,17 +254,6 @@ def clients_profiles_load_exercises():
 def clients_profiles_load_records():
     global client_id
     return json.dumps(get_records_for_exercise(request.json['exercise'], int(request.json['type']), client_id))
-
-
-@admin_blueprint.route('/clients_training_session', methods=['POST'])
-def clients_training_session():
-    """Returns training session (exercises, reps, sets, resistance)"""
-    return json.dumps(training_session_by_id(request.json['session_id']))
-
-
-@admin_blueprint.route('/calendar_data', methods=['POST'])
-def return_calendar_data():
-    return json.dumps(calendar_data(request.json['month'], request.json['year']))
 
 
 # error handlers

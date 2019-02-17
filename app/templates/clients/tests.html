@@ -3,3 +3,19 @@
 {% block navbar %}
 {% include 'clients/client_navbar.html' %}
 {% endblock %}
+
+{% block styles %}
+    {{ super() }}
+{% endblock %}
+
+{% block content %}
+    {% include 'flashing_messages.html' %}
+    <div id="training-app">
+      <tests :user="{{ user.id }}"></tests>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+  {{ super() }}
+{% endblock %}

@@ -158,7 +158,7 @@ function global() {
     function fetch_training_session_data(month, year)
     {
         $.ajax({
-            url: '/calendar_data',
+            url: '/api/calendar_data',
             data: JSON.stringify({month: month, year: year}),
             type: 'POST',
             contentType: 'application/json',

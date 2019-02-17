@@ -1,13 +1,14 @@
+from ..api.logic import set_parser, rep_exercise_parser, weight_lifted_parser
 from functools import wraps
 from flask_login import current_user
 from ..models import Users, MainMuscleGroups, SubMuscleGroups, Muscles, \
-    TrainingSession, Exercises, TrainingSessionExercises, exercises_muscles
+    TrainingSession, Exercises, TrainingSessionExercises
 from flask import abort
 import re
 import datetime
-import calendar
 from app import utc_to_local, db
 from sqlalchemy.sql import text
+from ..global_helpers import change_date_format
 
 
 def is_admin(original_function):
@@ -96,11 +97,6 @@ def sessions_by_muscle_groups(user_id, muscle_group_ids):
     return training_sessions
 
 
-def set_parser(exercise):
-    """Returns number of sets done for one exercise"""
-    return int(exercise.sets)
-
-
 def rep_parser(exercise):
     """Returns total number of reps done (sets x reps)"""
     reps = 0
@@ -125,21 +121,6 @@ def rep_parser(exercise):
         reps = int(exercise.reps) * set_parser(exercise)
 
     return reps
-
-
-def weight_lifted_parser(exercise):
-    """Parses weight lifted"""
-    weight = 0
-
-    if re.search('/', exercise.resistance):
-        pass
-    elif re.search('x', exercise.resistance):
-        multiplier, resistance = exercise.resistance.split('x')
-        weight = float(multiplier) * float(resistance.split('k')[0])
-    else:
-        weight = float(exercise.resistance.split('k')[0])
-
-    return weight
 
 
 def total_weight_lifted(exercise, user_id):
@@ -201,6 +182,9 @@ def multiple_sessions_data(user_id, muscle_group_ids):
 
     training_sessions = sessions_by_muscle_groups(user_id, muscle_group_ids)
 
+    if not training_sessions:
+        return training_sessions_data
+
     for tr_session in training_sessions:
         training_sessions_data.append(training_session_data(user_id, tr_session))
 
@@ -208,83 +192,6 @@ def multiple_sessions_data(user_id, muscle_group_ids):
     training_sessions_data.sort(key=lambda x: x[list(x.keys())[index]], reverse=True)
 
     return training_sessions_data
-
-
-# exercise data functions
-def rep_exercise_parser(exercise):
-    """Returns number of reps done in one exercise"""
-    reps = 0
-
-    if re.search('\+', exercise.reps):
-        numbers = exercise.reps.split('+')
-        for num in numbers:
-            if re.search('s', num):
-                num = num.split('s')[0]
-                reps += int(num)
-            else:
-                reps += int(num)
-    elif re.search('s', exercise.reps):
-        if re.search('x', exercise.reps):
-            time = exercise.reps.split('s')[0]
-            multiplier, res = time.split('x')
-            reps = float(multiplier) * float(res)
-        else:
-            reps = int(exercise.reps.split('s')[0])
-            reps = str(reps)
-    else:
-        reps = int(exercise.reps)
-
-    return reps
-
-
-def exercise_data(user_id, exercise_name):
-    data_exercise = {}
-    sessions = TrainingSession.query.filter_by(user_id=user_id).all()
-
-    exercises = TrainingSessionExercises.query.\
-        filter((TrainingSessionExercises.training_session_id.in_([s.id for s in sessions]))
-               & (TrainingSessionExercises.exercise == exercise_name)).all()
-
-    for ex in exercises:
-        date = change_date_format(str(TrainingSession.query.
-                                      filter_by(id=ex.training_session_id).first().date_created), "%m-%d")
-        data_exercise[date] = [set_parser(ex), rep_exercise_parser(ex), weight_lifted_parser(ex)]
-
-    return data_exercise
-
-
-# clients_profiles view
-def calendar_data(month, year):
-    """Returns data that is inserted in calendar (dates of trainings, training session ids, etc.)"""
-    number_of_days = calendar.monthrange(year, month)
-    first_day = datetime.date(year, month, 1).strftime("%Y-%m-%d %H:%M:%S")
-    last_day = datetime.date(year, month, number_of_days[1]).strftime("%Y-%m-%d %H:%M:%S")
-    data = {}
-
-    training_sessions = TrainingSession.\
-        query.filter(TrainingSession.date_created >= first_day, TrainingSession.date_created <= last_day).all()
-
-    for tr in training_sessions:
-        session_muscle_groups = tr.training_muscle_groups
-        muscle_groups_names = MainMuscleGroups.query.\
-            filter(MainMuscleGroups.id.in_([m.muscle_group_id for m in session_muscle_groups]))
-        data[change_date_format(str(tr.date_created), "%a %b %d %Y")]\
-            = (tr.id, [m.name for m in muscle_groups_names])
-
-    return data
-
-
-def training_session_by_id(session_id):
-    training_session = TrainingSession.query.filter_by(id=session_id).first()
-    exercises = training_session.exercises
-
-    training_session_exercises = []
-
-    for ex in exercises:
-        training_session_exercises\
-            .append([ex.ordinal_number, ex.exercise, ex.resistance, ex.sets, ex.reps])
-
-    return training_session_exercises
 
 
 def get_exercises_by_muscles(main_muscle_group_id):
@@ -350,11 +257,6 @@ def get_records_for_exercise(exercise, type_of, client_id):
 
     return return_data
 
-
-# date changer
-def change_date_format(date, format):
-    """Returns adequate date format for chart representation"""
-    return datetime.datetime.strptime(date, "%Y-%m-%d %H:%M:%S").strftime(format)
 
 
 

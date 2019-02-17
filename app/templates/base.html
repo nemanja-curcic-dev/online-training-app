@@ -8,7 +8,7 @@
 {% block scripts %}
     {{ super() }}
     <script src="{{ url_for('static', filename='js/js.js') }}"></script>
-    <script src="http://localhost:8080/dist/build.js"></script>
+    <script src="http://localhost:8081/dist/build.js"></script>
 {% endblock %}
 
 {% block navbar %}
@@ -17,7 +17,7 @@
         <div class="navbar-header">
           <a name="Home" class="navbar-brand page" href="{{ url_for('main_blueprint.index') }}">
               <span class="glyphicon glyphicon-home" style="color: white"></span>
-              <span style="color: white; font-weight: bold;">PERSONAL TRAINING DIARY</span></a>
+              <span id="personal-training-diary" style="color: white; font-weight: bold;">PERSONAL TRAINING DIARY</span></a>
         </div>
         <ul class="nav navbar-nav navbar-right">
             <li><a href="{{ url_for('auth_blueprint.register') }}"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
@@ -28,5 +28,5 @@
 {% endblock %}
 
 {% block content %}
-  <div id="training-app">
+
 {% endblock %}

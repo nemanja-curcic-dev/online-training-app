@@ -37,6 +37,9 @@ def return_app(type):
     from .clients import clients_blueprint
     app.register_blueprint(clients_blueprint)
 
+    from .api import api_blueprint
+    app.register_blueprint(api_blueprint)
+
     return app
 
 

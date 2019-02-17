@@ -1,4 +1,4 @@
-from flask import render_template, redirect, url_for
+from flask import render_template, redirect, url_for, request
 from . import main_blueprint
 from flask_login import current_user
 from ..models import Users
@@ -21,3 +21,7 @@ def before_request():
 @main_blueprint.route('/')
 def index():
     return render_template('main/index.html')
+
+
+# views used by clients and admins
+

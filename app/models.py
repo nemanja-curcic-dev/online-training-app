@@ -6,17 +6,29 @@ from flask_login import UserMixin
 from datetime import datetime
 
 
-users_tests = db.Table('users_tests',
-                       db.Column('user_id', db.Integer, db.ForeignKey('users.id')),
-                       db.Column('test_id', db.Integer, db.ForeignKey('tests.id')),
-                       db.Column('done_timestamp', db.Integer),
-                       db.Column('result', db.String(50)))
-
-
 exercises_muscles = db.Table('exercises_muscles',
                              db.Column('exercise_id', db.Integer, db.ForeignKey('exercises.id')),
                              db.Column('muscle_id', db.Integer, db.ForeignKey('muscles.id')),
                              db.Column('priority', db.SmallInteger))
+
+
+# class AnthropometryUsersTests(db.Model):
+#     __tablename__ = 'anthropometry_users_tests'
+#
+#     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
+#     test_id = db.Column(db.Integer, db.ForeignKey('anthropometry_tests.id'), primary_key=True)
+#     date_done = db.Column(db.DateTime)
+#     weight = db.Column(db.Integer)
+#     waist = db.Column(db.Integer)
+#     thigh = db.Column(db.Integer)
+#     body_fat_percentage = db.Column(db.Integer)
+#     body_fat_mass = db.Column(db.Integer)
+#     muscle_mass_percentage = db.Column(db.Integer)
+#     muscle_mass = db.Column(db.Integer)
+#
+#     # relationships
+#     anthropometry_tests = db.relationship("AnthropometryTests", back_populates="users")
+#     anthropometry_users = db.relationship("Users", back_populates="anthropometry_tests")
 
 
 # user class
@@ -38,8 +50,7 @@ class Users(db.Model, UserMixin):
     has_new_training = db.Column(db.Boolean, default=False)
     first_time = db.Column(db.Boolean, default=False)
 
-    users_tests = db.relationship('Tests', secondary=users_tests,
-                     backref=db.backref('tests', lazy='dynamic'))
+    anthropometry_tests = db.relationship('AnthropometryTests', back_populates='user')
 
     def __init__(self, first_name='', last_name='', email='', password=''):
         super().__init__()
@@ -116,10 +127,22 @@ class TrainingSession(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, nullable=False)
     date_created = db.Column(db.DateTime())
+    date_done = db.Column(db.DateTime())
     training_goal = db.Column(db.String(60))
     training_type = db.Column(db.Integer)
     annotations = db.Column(db.Text)
     done = db.Column(db.Boolean, default=False)
+
+    def to_json(self):
+        return {
+          'id': self.id,
+          'user_id': self.user_id,
+          'training_goal': self.training_goal,
+          'date_created': str(self.date_created),
+          'training_type': self.training_type,
+          'annotations': self.annotations,
+          'done': self.annotations
+        }
 
 
 class TrainingSessionExercises(db.Model):
@@ -132,10 +155,20 @@ class TrainingSessionExercises(db.Model):
     reps = db.Column(db.String(50))
     resistance = db.Column(db.String(40))
     ordinal_number = db.Column(db.SmallInteger)
+    mark = db.Column(db.SmallInteger)  # 1 - easy, 2 - just right, 3 - hard, 4 - too hard
     session_exercises = db.relationship('TrainingSession', backref='exercises')
 
     def __repr__(self):
         return self.exercise
+
+    def to_json(self):
+        return {
+            'id': self.id,
+            'exercise': self.exercise.capitalize(),
+            'sets': self.sets,
+            'reps': self.reps,
+            'resistance': self.resistance
+        }
 
 
 class TrainingSessionMuscleGroups(db.Model):
@@ -212,6 +245,14 @@ class Exercises(db.Model):
     def __repr__(self):
         return self.name
 
+    def to_json(self):
+        return{
+          'name': self.name.capitalize(),
+          'description': self.description,
+          'instructions': self.instructions,
+          'img_link': self.img_link
+        }
+
 
 class Equipment(db.Model):
     __tablename__ = 'equipment'
@@ -223,19 +264,44 @@ class Equipment(db.Model):
         return self.name.upper()
 
 
-class Tests(db.Model):
-    __tablename__ = 'tests'
+class AnthropometryTests(db.Model):
+    __tablename__ = 'anthropometry_tests'
 
     id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+
     test_name = db.Column(db.String(100))
     test_category = db.Column(db.String(64))
-    description = db.Column(db.Text)
-    img_url = db.Column(db.String(64))
-    video_url = db.Column(db.String(256))
-    alone = db.Column(db.Boolean, default=False)
+
+    date_done = db.Column(db.DateTime)
+    weight = db.Column(db.Integer)
+    waist = db.Column(db.Integer)
+    thigh = db.Column(db.Integer)
+    body_fat_percentage = db.Column(db.Integer)
+    body_fat_mass = db.Column(db.Integer)
+    muscle_mass_percentage = db.Column(db.Integer)
+    muscle_mass = db.Column(db.Integer)
+
+    user = db.relationship("Users", back_populates="anthropometry_tests")
 
     def __repr__(self):
         return self.test_name
+
+    def to_json(self):
+        return {
+          'id': self.id,
+          'user_id': self.user_id,
+          'test_name': self.test_name,
+          'test_category': self.test_category,
+          'date_done': str(self.date_done).split(' ')[0],
+          'weight': self.weight,
+          'waist': self.waist,
+          'thigh': self.thigh,
+          'body_fat_percentage': self.body_fat_percentage,
+          'body_fat_mass': self.body_fat_mass,
+          'muscle_mass_percentage': self.muscle_mass_percentage,
+          'muscle_mass': self.muscle_mass
+        }
 
 
 
