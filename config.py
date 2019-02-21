@@ -16,6 +16,12 @@ class Config:
                               mysql_password + '@localhost/online_training_app?charset=utf8'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
+    MAIL_SERVER = 'smtp.gmail.com'
+    SMTP_PORT = 465
+    MAIL_USE_SSL = True
+    MAIL_USERNAME = os.environ['MAIL_USERNAME']
+    MAIL_PASSWORD = os.environ['MAIL_PASSWORD']
+
 
 class DevelopmentConfig(Config):
 
