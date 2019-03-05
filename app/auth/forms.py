@@ -1,5 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, ValidationError
+from wtforms.fields.html5 import EmailField
 from wtforms.validators import DataRequired, EqualTo, Email, Length
 from ..models import Users
 
@@ -11,7 +12,7 @@ class Register(FlaskForm):
     last_name = StringField('Last name',
                             validators=[DataRequired(message='Last name is required.'),
                             Length(min=2, max=30, message='Last name must be between 2 and 30 characters long.')])
-    email = StringField('Email', validators=[DataRequired(
+    email = EmailField('Email', validators=[DataRequired(
         message='Email is required.'
     ), Email(), Length(min=8, max=50, message='Length of email must be between 8 and 50 characters long.')])
     password = PasswordField('Password', validators=[DataRequired(
