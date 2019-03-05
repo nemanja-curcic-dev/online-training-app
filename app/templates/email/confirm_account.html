@@ -8,6 +8,6 @@
 <p>You must click on the following link to confirm your account.</p>
 <br>
 
-<a href="https://{{ url_for('auth_blueprint.confirm', token=token, _external=True) }}">link</a>
+<a href="{{ url_for('auth_blueprint.confirm', token=token, _external=True) }}">link</a>
 
 <h3>Your Personal training diary team!</h3>
