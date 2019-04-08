@@ -1,6 +1,6 @@
 # aplikacija_za_online_treninge
 
-> A Vue.js project
+> Flask Vue.js project for personal training
 
 ## Build Setup
 
